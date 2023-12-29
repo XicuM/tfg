@@ -1,0 +1,371 @@
+\newcounter{wpref}
+\renewcommand{\arraystretch}{1.25}
+
+
+% ----------------------------------------------------------------------
+% WP1
+
+\stepcounter{wpref}
+\begin{center}
+    \begin{tabular}{| p{8.5cm} | p{5.25cm} |}
+        \hline
+            \textbf{WP name:} 
+                \newline \hspace*{0.3cm}
+                \begin{minipage}[t]{8cm}
+                    Estudi i investigació prèvia
+                \end{minipage}
+                \smallskip
+            & 
+            \textbf{WP ref:} 
+                \newline \hspace*{0.3cm}
+                \begin{minipage}[t]{8cm}
+                    \arabic{wpref}
+                \end{minipage}
+            \\
+        \hline
+            \textbf{Short description:} 
+                \newline \hspace*{0.3cm}
+                \begin{minipage}[t]{8cm}
+                    En aquest paquet de treball, es realitza un estudi de les
+                    prestacions del disseny elaborat per l'equip amb l’objectiu
+                    de trobar les seves deficiències i proposar millores o
+                    redissenys que incrementin la qualitat del control.
+                    Mentrestant, es realitza una investigació per a l’elecció
+                    d’una placa FPGA en la qual implementar l’algorisme de
+                    control i un resolver o encoder.
+                \end{minipage}
+                \smallskip
+            &
+            \textbf{Planned start date:} \newline \hspace*{0.3cm} 
+                { 14/03/2022 } \newline
+            \textbf{Planned end date:} \newline \hspace*{0.3cm} 
+                { 23/04/2022 } \\
+        \hline
+
+            \textbf{Internal task T1:} 
+                \newline \hspace*{0.3cm}
+                \begin{minipage}[t]{8cm}
+                    Estudi de les prestacions del disseny inicial
+                \end{minipage}
+                \smallskip
+
+            \textbf{Internal task T2:} 
+                \newline \hspace*{0.3cm}
+                \begin{minipage}[t]{8cm}
+                    Elecció d’una placa FPGA comercial
+                \end{minipage}
+                \smallskip
+
+            \textbf{Internal task T3:}
+                \newline \hspace*{0.3cm}
+                \begin{minipage}[t]{8cm}
+                    Elecció d’un resolver o encoder comercial
+                \end{minipage}
+                \smallskip
+            & 
+            \textbf{ Deliverables: }
+                \begin{itemize}
+                    \item { Model en Simulink (.xls) }
+                    \item { Figures comentades generades per simulació }
+                    \item { Fitxers VHDL (.hdl) }
+                \end{itemize} \\
+        \hline
+    \end{tabular}
+\end{center}
+
+
+% ----------------------------------------------------------------------
+% WP2 
+
+\stepcounter{wpref}
+\begin{center}
+    \begin{tabular}{| p{8.5cm} | p{5.25cm} |}
+        \hline
+            \textbf{WP name:} 
+                \newline \hspace*{0.3cm}
+                \begin{minipage}[t]{8cm}
+                    Impementació de l'algorisme
+                \end{minipage}
+                \smallskip
+            & 
+            \textbf{WP ref:}
+                \newline \hspace*{0.3cm}
+                \begin{minipage}[t]{8cm}
+                    \arabic{wpref}
+                \end{minipage}
+            \\
+        \hline
+            \textbf{Short description:} 
+                \newline \hspace*{0.3cm}
+                \begin{minipage}[t]{8cm}
+                    Aquest paquet de treball consisteix a realitzar el
+                    redisseny (si escau) i la implementació, primer en Simulink
+                    i després en codi VHDL, de l’algorisme de control.
+                \end{minipage}
+                \smallskip
+            &
+            \textbf{Planned start date:} \newline \hspace*{0.3cm} 
+                { 28/02/2022 } \newline
+            \textbf{Planned end date:} \newline \hspace*{0.3cm} 
+                { 13/03/2022 } \\
+        \hline
+
+            \textbf{Internal task T1:} 
+                \newline \hspace*{0.3cm}
+                \begin{minipage}[t]{8cm}
+                    Millora i implementació del SVPWM 
+                \end{minipage}
+                \smallskip
+
+            \textbf{Internal task T2:} 
+                \newline \hspace*{0.3cm}
+                \begin{minipage}[t]{8cm}
+                    Millora i implementació de les transformades de Clarke, de
+                    Park i de Park inversa, i de les LUTs del sinus, del
+                    cosinus, de l’arrel quadrada i de l’arrel quadrada
+                    recíproca
+                \end{minipage}
+                \smallskip
+
+            \textbf{Internal task T3:}
+                \newline \hspace*{0.3cm}
+                \begin{minipage}[t]{8cm}
+                    Millora i implementació dels controls PI per al control del
+                    corrent, Field Weakening i el limitador de torque
+                \end{minipage}
+                \smallskip
+
+            \textbf{Internal task T4:} 
+                \newline \hspace*{0.3cm}
+                \begin{minipage}[t]{8cm}
+                    Depuració del sistema complet
+                \end{minipage}
+                \smallskip
+
+            \textbf{Internal task T5:}
+                \newline \hspace*{0.3cm}
+                \begin{minipage}[t]{8cm}
+                    Millora i implementació del control del resolver
+                \end{minipage}
+                \smallskip
+            &
+            \textbf{ Deliverables: }
+                \begin{itemize}
+                    \item { Figures comentades generades per simulació }
+                    \item { Taules comparatives }
+                \end{itemize} \\
+        \hline
+    \end{tabular}
+\end{center}
+
+
+% ----------------------------------------------------------------------
+% WP3 
+
+\stepcounter{wpref}
+\begin{center}
+    \begin{tabular}{| p{8.5cm} | p{5.25cm} |}
+        \hline
+            \textbf{WP name:}
+                \newline \hspace*{0.3cm}
+                \begin{minipage}[t]{8cm}
+                    Disseny i implementació en microprocessador 
+                \end{minipage}
+                \smallskip
+            & 
+            \textbf{WP ref:}
+                \newline \hspace*{0.3cm}
+                \begin{minipage}[t]{8cm}
+                    \arabic{wpref}
+                \end{minipage}
+            \\
+        \hline
+            \textbf{Short description:} 
+                \newline \hspace*{0.3cm}
+                \begin{minipage}[t]{8cm}
+                    Aquest paquet de treball consisteix a dissenyar,
+                    implementar i validar la gestió de la comunicació i altres
+                    interrupcions i events sobre el microcontrolador que
+                    incorpora la placa FPGA.
+                \end{minipage}
+                \smallskip
+            &
+            \textbf{Planned start date:} \newline \hspace*{0.3cm} 
+                { 22/04/2022 } \newline
+            \textbf{Planned end date:} \newline \hspace*{0.3cm} 
+                { 10/05/2022 } \\
+        \hline
+
+            \textbf{Internal task T1:} 
+                \newline \hspace*{0.3cm}
+                \begin{minipage}[t]{8cm}
+                    Disseny de la màquina d’estats
+                \end{minipage}
+                \smallskip
+
+            \textbf{Internal task T2:} 
+                \newline \hspace*{0.3cm}
+                \begin{minipage}[t]{8cm}
+                    Implementació del protocol de comunicació CAN
+                \end{minipage}
+                \smallskip
+
+            \textbf{Internal task T3:}
+                \newline \hspace*{0.3cm}
+                \begin{minipage}[t]{8cm}
+                    Validació amb un CAN bus analyzer
+                \end{minipage}
+                \smallskip
+            & 
+            \textbf{ Deliverables: }
+                \begin{itemize}
+                    \item { Diagrama d’estats }
+                    \item { Codi en C de la màquina d’estats }
+                    \item { Captures de les trames de comunicació }
+                \end{itemize} \\
+        \hline
+    \end{tabular}
+\end{center}
+
+
+% ----------------------------------------------------------------------
+% WP4 
+
+\stepcounter{wpref}
+\begin{center}
+    \begin{tabular}{| p{8.5cm} | p{5.25cm} |}
+        \hline
+            \textbf{WP name:} 
+                \newline \hspace*{0.3cm}
+                \begin{minipage}[t]{8cm}
+                    Validació de l’algorisme de control en hardware
+                \end{minipage}
+                \smallskip
+                \newline
+            & 
+            \textbf{WP ref:} 
+                \newline \hspace*{0.3cm}
+                \begin{minipage}[t]{8cm}
+                    \arabic{wpref}
+                \end{minipage}
+            \\
+        \hline
+            \textbf{Short description:} 
+                \newline \hspace*{0.3cm}
+                \begin{minipage}[t]{8cm}
+                    En aquest paquet de treball, es validaran les prestacions
+                    de l’algorisme de control implementat. La validació es durà
+                    a terme en tres fases: una primera en què se simula l’àrea
+                    utilitzada i la temportizació mitjançant Vivado, el
+                    software del fabricant Xilinx per al desenvolupament amb
+                    FPGAs; una segona fase consistent en la validació sobre la
+                    placa de potència i finalment una validació en bancada en
+                    la que es posa a prova el control dels motors.
+                \end{minipage}
+                \smallskip
+            &
+            \textbf{Planned start date:} \newline \hspace*{0.3cm} 
+                { 11/05/2022 } \newline
+            \textbf{Planned end date:} \newline \hspace*{0.3cm} 
+                { 08/06/2022 } \\
+        \hline
+
+            \textbf{Internal task T1:} 
+                \newline \hspace*{0.3cm}
+                \begin{minipage}[t]{8cm}
+                    Simulacions en Xilinx Vivado
+                \end{minipage}
+                \smallskip
+
+            \textbf{Internal task T2:} 
+                \newline \hspace*{0.3cm}
+                \begin{minipage}[t]{8cm}
+                    Validació en placa de potència
+                \end{minipage}
+                \smallskip
+
+            \textbf{Internal task T3:}
+                \newline \hspace*{0.3cm}
+                \begin{minipage}[t]{8cm}
+                    Validació en bancada
+                \end{minipage}
+                \smallskip
+            & 
+            \textbf{ Deliverables: }
+                \begin{itemize}
+                    \item { Captures de la simulació }
+                    \item { Informes autogenerats d'utilització i de temporització }
+                    \item { Imatge d'arrencada en targeta SD (extensió .bin) }
+                    \item { Captrues del monitors dels instruments de testeig }
+                \end{itemize} \\
+        \hline
+    \end{tabular}
+\end{center}
+
+
+% ----------------------------------------------------------------------
+% WP5 %
+
+\stepcounter{wpref}
+\begin{center}
+    \begin{tabular}{| p{8.5cm} | p{5.25cm} |}
+        \hline
+            \textbf{WP name:} 
+                \newline \hspace*{0.3cm}
+                \begin{minipage}[t]{8cm}
+                    Redacció de la documentació
+                \end{minipage}
+                \smallskip
+            & 
+            \textbf{WP ref:} 
+                \newline \hspace*{0.3cm}
+                \begin{minipage}[t]{8cm}
+                    \arabic{wpref}
+                \end{minipage}
+            \\
+        \hline
+            \textbf{Short description:} 
+                \newline \hspace*{0.3cm}
+                \begin{minipage}[t]{8cm}
+                    Aquest bloc de treball consisteix a recopilar el
+                    coneixement generat, ordenar-lo i redactar la documentació
+                    requerida.
+                \end{minipage}
+                \smallskip
+            &
+            \textbf{Planned start date:} \newline \hspace*{0.3cm} 
+                { 28/02/2022 } \newline
+            \textbf{Planned end date:} \newline \hspace*{0.3cm} 
+                { 19/06/2022 } \\
+        \hline
+
+            \textbf{Internal task T1:} 
+                \newline \hspace*{0.3cm}
+                \begin{minipage}[t]{8cm}
+                    Redacció de la proposta de projecte i pla de treball
+                \end{minipage}
+                \smallskip
+
+            \textbf{Internal task T2:} 
+                \newline \hspace*{0.3cm}
+                \begin{minipage}[t]{8cm}
+                    Redacció de la revisió crítica
+                \end{minipage}
+                \smallskip
+
+            \textbf{Internal task T3:}
+                \newline \hspace*{0.3cm}
+                \begin{minipage}[t]{8cm}
+                    Redacció de la memòria final
+                \end{minipage}
+                \smallskip
+            & 
+            \textbf{Deliverables: }
+                \begin{itemize}
+                    \item { Proposta de projecte i pla de treball }
+                    \item { Revisió crítica }
+                    \item { Memòria final }
+                \end{itemize} \\
+        \hline
+    \end{tabular}
+\end{center}

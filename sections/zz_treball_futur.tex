@@ -1,0 +1,31 @@
+Com ja s'ha vist al llarg de la memòria, encara queda treball per realitzar
+tant a nivell de programari com de hardware. Així, el projecte del \emph{motor
+drive} propi encara continua i es preveuen avenços en els propers mesos. En el
+moment de l'escriptura de la memòria, l'equip està iterant el disseny les
+plaques de potència, que es el pas previ al seu montatge i testeig físic. 
+
+Quant l'implementació de l'algorisme de control i de la capa de seguretat es
+poden destacar els següent treball futur:
+
+\begin{itemize}
+    \item 
+        S'implementarà i es validarà la comunicació CAN amb els circuits de
+        precàrrega i amb la PU del vehicle.
+    \item
+        Es programaran la subrutina d'aturada suau per evitar que l'algorisme
+        de control rebi una parada amb un esglaó.
+    \item
+        Es treballarà en realitzar el sistema de detecció de l'angle i de la
+        velocitat angular sobre FPGA. Actualment la detecció s'implementa en
+        hardware mitjançant un circuit integrat especialitzat. El problema
+        principal a solucionar és la baixa velocitat de de funcionament de
+        l'integrat en comparació al de la FPGA.
+    \item 
+        Es valorarà implementar el \emph{hardware in the loop} en cas de voler
+        millorar les prestacions de l'algorisme de control, ja que proporciona
+        una forma de testejar l'algorisme independentment de la fase de
+        desenvolupament del hardware.
+    \item
+        Es valorarà millorar l'eficiència energèntica de l'inversor realitzant
+        una metodologia de testeig més intensiva.
+\end{itemize}

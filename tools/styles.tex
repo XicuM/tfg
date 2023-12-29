@@ -1,0 +1,106 @@
+\colorlet{punct}{red!60!black}
+\definecolor{background}{HTML}{EEEEEE}
+\definecolor{delim}{RGB}{20,105,176}
+\colorlet{numb}{magenta!60!black}
+\lstdefinelanguage{json}{
+    basicstyle=\normalfont\ttfamily,
+    numbers=left,
+    numberstyle=\scriptsize,
+    stepnumber=1,
+    numbersep=8pt,
+    showstringspaces=false,
+    breaklines=true,
+    frame=lines,
+    backgroundcolor=\color{background},
+    literate=
+     *{0}{{{\color{numb}0}}}{1}
+      {1}{{{\color{numb}1}}}{1}
+      {2}{{{\color{numb}2}}}{1}
+      {3}{{{\color{numb}3}}}{1}
+      {4}{{{\color{numb}4}}}{1}
+      {5}{{{\color{numb}5}}}{1}
+      {6}{{{\color{numb}6}}}{1}
+      {7}{{{\color{numb}7}}}{1}
+      {8}{{{\color{numb}8}}}{1}
+      {9}{{{\color{numb}9}}}{1}
+      {:}{{{\color{punct}{:}}}}{1}
+      {,}{{{\color{punct}{,}}}}{1}
+      {\{}{{{\color{delim}{\{}}}}{1}
+      {\}}{{{\color{delim}{\}}}}}{1}
+      {[}{{{\color{delim}{[}}}}{1}
+      {]}{{{\color{delim}{]}}}}{1},
+}
+
+%RBG FFD33E / C95D40
+\definecolor{upcorange}{HTML}{FFD33E}
+\hypersetup{allcolors=black}
+
+
+% ----------------------------------------------------------------------
+% Page style
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\includegraphics[height=1.2cm]{img/0_logos/upclogo.png}}
+\rhead{\includegraphics[height=1.2cm]{img/0_logos/logo_telecos.png}}
+\rfoot{\thepage{}}
+
+\renewcommand{\footrulewidth}{0.4pt}
+%\futurelet\TMPfootrule\def\footrule{{\color{upcorange}\TMPfootrule}}
+\futurelet\TMPfootrule\def\footrule{{\color{gray!80}\TMPfootrule}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{%
+%\color{upcorange}\leaders\hrule height \headrulewidth\hfill}}
+\color{gray!80}\leaders\hrule height \headrulewidth\hfill}}
+%\renewcommand*\ShowFrameColor{\color{red}}
+
+
+% ----------------------------------------------------------------------
+% Listings style
+
+\definecolor{color_comment}{rgb}{0, 0.5, 0.18}      % Green
+\definecolor{color_keyword}{rgb}{0.17, 0.12, 1.}    % Blue
+\definecolor{color_frame}{rgb}{0.2, 0.2, 0.2}       % Dark grey
+\definecolor{color_string}{rgb}{0.8, 0.32, 0.26}    % Dark orange
+\definecolor{yellow}{rgb}{1, 1, 0.55}               % Yellow
+
+\lstdefinestyle{mystyle}{
+    basicstyle=\small\ttfamily,
+    commentstyle=\color{color_comment},
+    keywordstyle=\color{color_keyword},
+    numberstyle=\tiny\color{color_frame},
+    rulecolor=\color{black},
+    stringstyle=\color{color_string},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    frame=single,   
+    xleftmargin=20pt,
+    framesep=3pt,
+    rulecolor=\color{color_frame},
+    framexleftmargin=17pt,
+    breaklines=true,
+    captionpos=t,
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=6pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,           
+    tabsize=1,
+    extendedchars=true,
+    literate={í}{{\'i}}1
+}
+
+\lstset{style=mystyle}
+
+
+% ----------------------------------------------------------------------
+% Others
+
+\setlength{\headsep}{1.5cm}
+\useunder{\uline}{\ul}{}
+\frenchspacing
+\setuptodonotes{bordercolor=white}
+\renewcommand*\descriptionlabel[1]{\hspace\leftmargin$#1$}
+
+\renewcommand\appendixpagename{Annexos}

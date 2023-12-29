@@ -1,0 +1,52 @@
+\acswitchoff 
+\babel@toc {catalan}{}\relax 
+\contentsline {figure}{\numberline {1}{\ignorespaces Work Breakdown Structure. \relax }}{11}{figure.caption.11}%
+\contentsline {figure}{\numberline {2}{\ignorespaces Diagrama de Gantt del projecte \relax }}{16}{figure.caption.13}%
+\contentsline {figure}{\numberline {3}{\ignorespaces Competició de Formula Student. \emph {BCN eMototsport}}}{19}{figure.caption.23}%
+\contentsline {figure}{\numberline {4}{\ignorespaces Renderització del CAT14x. \emph {BCN eMotorsport} }}{20}{figure.caption.24}%
+\contentsline {figure}{\numberline {5}{\ignorespaces Renderització del tren de potència. \emph {BCN eMotorsport} }}{20}{figure.caption.24}%
+\contentsline {figure}{\numberline {6}{\ignorespaces Esquema de connexió del tren de potència \relax }}{20}{figure.caption.25}%
+\contentsline {figure}{\numberline {7}{\ignorespaces Bateria del CAT14x. \emph {BCN eMotorsport.}\relax }}{21}{figure.caption.26}%
+\contentsline {figure}{\numberline {8}{\ignorespaces Vista explosionada del motor del CAT14x. \emph {BCN eMotorsport.}\relax }}{22}{figure.caption.28}%
+\contentsline {figure}{\numberline {9}{\ignorespaces Doble inversor Lenze Mobile DSU 60/60. \relax }}{23}{figure.caption.30}%
+\contentsline {figure}{\numberline {10}{\ignorespaces Col·locació dels Lenze Mobile }}{23}{figure.caption.30}%
+\contentsline {figure}{\numberline {11}{\ignorespaces Data and distribution box. \emph {BCN eMotorsport}\relax }}{25}{figure.caption.32}%
+\contentsline {figure}{\numberline {12}{\ignorespaces Circuit de distribució. \emph {BCN eMotorsport}\relax }}{25}{figure.caption.32}%
+\contentsline {figure}{\numberline {13}{\ignorespaces Diagrama de blocs del control}}{26}{figure.caption.33}%
+\contentsline {figure}{\numberline {14}{\ignorespaces Circuit equivalent d'un inversor i motor trifàsics \relax }}{27}{figure.caption.34}%
+\contentsline {figure}{\numberline {15}{\ignorespaces Generació dels cicles de treball en el SPWM.\relax }}{31}{figure.caption.35}%
+\contentsline {figure}{\numberline {16}{\ignorespaces Estats de l'inversor}}{32}{figure.caption.36}%
+\contentsline {figure}{\numberline {17}{\ignorespaces Síntesi del vector espacial}}{33}{figure.caption.37}%
+\contentsline {figure}{\numberline {18}{\ignorespaces Càlcul del temps d'encesa \relax }}{34}{figure.caption.40}%
+\contentsline {figure}{\numberline {19}{\ignorespaces Cicles de treball obtinguts amb SVPWM}}{35}{figure.caption.41}%
+\contentsline {figure}{\numberline {20}{\ignorespaces Diagrama de blocs del control}}{35}{figure.caption.42}%
+\contentsline {figure}{\numberline {21}{\ignorespaces La Cora Z-7 en la prova dels Gate Drivers. \emph {BCN eMotorsport.} \relax }}{37}{figure.caption.43}%
+\contentsline {figure}{\numberline {22}{\ignorespaces Captura de l'oscil·loscopi. \emph {BCN eMotorsport.} \relax }}{37}{figure.caption.43}%
+\contentsline {figure}{\numberline {23}{\ignorespaces Digilent Cora Z7-10 \relax }}{38}{figure.caption.44}%
+\contentsline {figure}{\numberline {24}{\ignorespaces MIYR Z-Turn \relax }}{38}{figure.caption.44}%
+\contentsline {figure}{\numberline {25}{\ignorespaces Implementació del control amb Vitis\texttrademark Model Composer \relax }}{40}{figure.caption.46}%
+\contentsline {figure}{\numberline {26}{\ignorespaces Detall de la implementació d'un PI amb \emph {anti-windup} \relax }}{40}{figure.caption.47}%
+\contentsline {figure}{\numberline {27}{\ignorespaces Implementació del control de velocitat \relax }}{41}{figure.caption.48}%
+\contentsline {figure}{\numberline {28}{\ignorespaces Implementació de les funcions sinus i cosinus \relax }}{41}{figure.caption.49}%
+\contentsline {figure}{\numberline {29}{\ignorespaces Implementació de la transformada de Park \relax }}{42}{figure.caption.50}%
+\contentsline {figure}{\numberline {30}{\ignorespaces Implementació de la transformada de Clarke \relax }}{42}{figure.caption.50}%
+\contentsline {figure}{\numberline {31}{\ignorespaces Vista general del bloc de control de corrent \relax }}{42}{figure.caption.51}%
+\contentsline {figure}{\numberline {32}{\ignorespaces Implementació del Field Weakening \relax }}{43}{figure.caption.52}%
+\contentsline {figure}{\numberline {33}{\ignorespaces Implementació de la generació del corrent de referència $i_d*$ \relax }}{43}{figure.caption.53}%
+\contentsline {figure}{\numberline {34}{\ignorespaces Implementació de l'SVPWM. \relax }}{44}{figure.caption.54}%
+\contentsline {figure}{\numberline {35}{\ignorespaces Bloc de generaciió de la portadora triangular \relax }}{45}{figure.caption.55}%
+\contentsline {figure}{\numberline {36}{\ignorespaces Bloc de generaciió de PWM \relax }}{45}{figure.caption.55}%
+\contentsline {figure}{\numberline {37}{\ignorespaces Disseny de blocs en el projecte de Vivado \relax }}{45}{figure.caption.56}%
+\contentsline {figure}{\numberline {38}{\ignorespaces Diagrama UML de la màquina d'estats finita. \relax }}{47}{figure.caption.57}%
+\contentsline {figure}{\numberline {39}{\ignorespaces Diagrama UML del mòdul State. \relax }}{48}{figure.caption.60}%
+\contentsline {figure}{\numberline {40}{\ignorespaces Diagrama UML del mòdul Terminal. \relax }}{48}{figure.caption.62}%
+\contentsline {figure}{\numberline {41}{\ignorespaces Diagrama UML de classes del mòdul Register. \relax }}{49}{figure.caption.64}%
+\contentsline {figure}{\numberline {42}{\ignorespaces Diagrama UML de classes del mòdul Log. \relax }}{50}{figure.caption.67}%
+\contentsline {figure}{\numberline {43}{\ignorespaces Prova de la implementació del sinus i del cosinus \relax }}{51}{figure.caption.69}%
+\contentsline {figure}{\numberline {44}{\ignorespaces Prova de la implementació del senyal triangular pel PWM \relax }}{51}{figure.caption.71}%
+\contentsline {figure}{\numberline {45}{\ignorespaces Proves d'implementació de l'SVPWM}}{52}{figure.caption.73}%
+\contentsline {figure}{\numberline {46}{\ignorespaces Prova de la implementació del limitador de voltatge \relax }}{52}{figure.caption.75}%
+\contentsline {figure}{\numberline {47}{\ignorespaces Model de Simulink desenvolupat per l'equip}}{52}{figure.caption.76}%
+\contentsline {figure}{\numberline {48}{\ignorespaces Angle del rotor respecte l'estàtor. \relax }}{53}{figure.caption.77}%
+\contentsline {figure}{\numberline {49}{\ignorespaces Resultat de la simulació (I)}}{53}{figure.caption.78}%
+\contentsline {figure}{\numberline {50}{\ignorespaces Resultat de la simulació (II)}}{53}{figure.caption.79}%

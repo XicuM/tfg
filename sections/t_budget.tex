@@ -1,0 +1,106 @@
+El pressupost total del projecte s'adjunta en la taula de sota. En el projecte
+s'ha utilitzat tant la llicència d'estudiant de Matlab que proporciona la UPC
+als seus estudiant com el període de prova de Vitis Model Composer de 3 mesos.
+Així, es considera en la taula el cost que tindria el projecte sense tenir en
+compte aquests conceptes.
+
+\begin{table}[!htb]
+    \caption{Cost del projecte}
+
+    \begin{tabular}{l r l l r}
+        \toprule
+            \textbf{Concepte} & 
+            \textbf{Preu} & 
+            \textbf{Amortització} & 
+            \textbf{Temps} & 
+            \textbf{Cost total} \\
+        \midrule
+        
+            MYIR Z-Turn & 
+            187,72€ & 
+            - & 
+            - &
+            187,72€ \\
+
+            Portàtil MSI Leopard GP65 & 
+            1299€ &
+            1 mes &
+            4 mesos &
+            108,25€ \\
+
+            Llicència Matlab & 
+            800€/any &
+            1 any &
+            4 mesos &
+            266,67€ \\
+
+            Llicència Vitis Model Composer & 
+            700€ &
+            3 anys &
+            3 mesos &
+            43,75€ \\
+
+            Sou enginyer & 
+            10€/h &
+            - &
+            450 h &
+            4.500€ \\
+        \midrule
+            {} & {} & {} & {\textbf{Total}} & {5106,39€} \\
+        \cline{4-5}
+    \end{tabular}
+\end{table}
+
+Per aquest projecte també es considera rellevant realitzar una traçabilitat
+del programari emprat. D'aquesta manera, s'adjunta el Software Bill of
+Materials en la forma de taula \ref{sbom}.
+
+\begin{table}[!htb]
+    \caption{ Software Bill of Materials  }
+    \label{sbom}
+
+    \begin{tabular}{l l m{6.4cm} m{3cm}}
+        \toprule
+            \textbf{Programari} & 
+            \textbf{Versió} & 
+            \textbf{Llicència} & 
+            \textbf{Copyright} \\
+        \midrule
+            Matlab/Simulink & 
+            2022a & 
+            Entorn de simulació & 
+            MathWorks \\
+
+            Vivado &
+            2021.2 &
+            Disseny i implementació de lògica programable per FPGAs de Xilinx &
+            AMD (Xilinx) \\
+
+            Vitis &
+            2021.2 &
+            IDE de Xilinx basat en Eclipse &
+            AMD (Xilinx) \\
+
+            Vitis Model Composer & 
+            2021.2 & 
+            Extensió de Simulink & 
+            AMD (Xilinx) \\ 
+
+            PetaLinux & 
+            2017.4 & 
+            Distribució de Linux per la familia de SoCs ZYNQ-7000 & 
+            AMD (Xilinx) \\ 
+
+            CMake & 
+            3.16.3 & 
+            Generació de Makefiles per compilar C++ & 
+            Kitware Inc. \\ 
+
+            G++ & 
+            9.4.0 & 
+            Eina de compilació de C++ & 
+            Free Software Foundation Inc. \\ 
+
+        \bottomrule
+    \end{tabular}
+\end{table}

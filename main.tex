@@ -1,0 +1,270 @@
+\documentclass[a4paper,12pt]{article}
+
+\input{tools/packages.tex}
+\input{tools/styles.tex}
+\input{tools/acro.tex}
+
+\begin{document}
+
+
+% ----------------------------------------------------------------------
+%  COVER
+
+\fancypagestyle{alim}
+{
+    \fancyhf{}\renewcommand{\headrulewidth}{0pt}
+    \cfoot{ \includegraphics[height=2.2cm]{ ../img/0_logos/logo_telecos.png } }
+}
+
+\thispagestyle{empty}
+
+\begin{center} {
+    \sffamily 
+    \resizebox
+        {0.8\textwidth}
+        {!}
+        {\includegraphics{img/0_logos/upc_completo+telecos.png}}\\
+    \vspace{1cm}
+
+    {
+        \Huge 
+        {
+            Implementació en FPGA d’un control \\ 
+            de camp orientat amb debilitament de \\ 
+            camp per motors IPMSM \\
+        }
+    }
+    \vspace{0.75cm} 
+    \hrule \color{black}
+    \vspace{1cm}
+
+    \large 
+    {
+        Treball Fi de Grau \\
+        realitzat a \\
+        l'Escola Tècnica d'Enginyeria de Telecomunicació de Barcelona \\
+        Universitat Politècnica de Catalunya \\
+        per \\
+        \vspace{0.5cm}
+        Francisco Marí Prats
+    }
+    \vspace{1.5cm}
+
+    {
+        En compliment parcial \\ 
+        dels requisits per al Grau en \\
+        \textit{Enginyeria Electrònica de Telecomunicació}
+    }
+    \vspace{2cm}
+
+    {
+        Director: Domingo Biel Solé \\
+        Barcelona, 20 de Juny de 2022
+    }
+}
+\end{center}
+
+
+% ----------------------------------------------------------------------
+% TO DO LIST
+
+%\newpage
+%\listoftodos
+
+
+% ----------------------------------------------------------------------
+%  ABSTRACTS
+
+% Anglès
+\newpage
+\section*{Abstract}
+{
+    Permanent magnet synchronous motors (IPMSM) are increasingly used in
+    electric vehicles due to their high power density and efficiency properties.
+    This type of engine involves applying a complex control, which can be
+    implemented in programmable logic with an FPGA.
+
+    In this project, a field oriented control (FOC) for IPMSM motors is
+    implemented in FPGA and adapted to be used in a Formula Student racing
+    vehicle. The control incorporates an MTPA (Maximum Torque per Ampere)
+    control strategy with field weakening (FW) and uses Space
+    Vector Modulation as a pulse width modulation generating technique.
+
+    Programming and validation of the control algorithm is performed directly
+    on the Matlab/Simulink \textsuperscript{\textregistered} environment using
+    Vitis\texttrademark Model Composer add-on. This report also addresses the
+    choice of the FPGA board and the design of the software architecture for
+    starting and stopping the engine and providing an extra layer of safety. 
+}
+
+% Castellà
+\newpage
+\section*{Resumen}
+{ 
+    Los motores síncronos de imanes permanentes (IPMSM) se emplean cada vez más
+    en los vehículos eléctricos debido a su densidad de potencia y eficiencia.
+    El uso de este tipo de motor lleva aparejado la implementación de un
+    control complejo, que puede implementarse en lógica programable con una
+    FPGA.
+
+    En este proyecto se adapta y se implementa un control de campo orientado
+    por motores IPMSM en FPGA para su uso en un vehículo de competición de
+    \emph{Formula Student}. El control incorpora una estrategia de control MTPA
+    (\emph{Maximum Torque per Ampere}) con debilitamiento de campo (\emph{Field
+    Weakening}) y emplea \emph{Space Vector Modulation} como técnica generadora
+    de PWM.
+
+    La programación y validación por simulación del algoritmo de control se
+    realiza con directamente sobre el entorno
+    Matlab/Simulink\textsuperscript{\textregistered}, por medio de la extensión
+    Vitis\texttrademark Model Composer. En esta memoria también se aborda la
+    elección de la placa FPGA y el diseño de la arquitectura de software de una
+    capa de arranque, parada y seguridad. 
+}
+
+% Català
+\newpage
+\section*{Resum}
+{
+    Els motors síncrons d'imants permanents (IPMSM) s'empren cada vegada més en
+    els vehicles elèctrics degut a seva densitat de potència i eficiència. L'ús
+    d'aquest tipus de motor comporta aplicar un control complexe, el qual pot
+    implementar-se en lògica programable amb una FPGA.
+
+    En aquest projecte s'adapta i s'implementa un control de camp orientat per
+    motors IPMSM en FPGA pel seu ús en un vehicle de competició de
+    \emph{Formula Student}. El control incorpora una estratègia de control MTPA
+    (\emph{Maximum Torque per Ampere}) amb debilitament de camp (\emph{Field
+    Weakening}) i empra l'\emph{Space Vector Modulation} com tècnica generadora
+    de PWM.
+
+    La programació i la validació per simulació de l'algorisme de control es
+    realitza amb directament sobre l'entorn
+    Matlab/Simulink\textsuperscript{\textregistered} fent ús de l'extensió
+    \emph{Vitis\texttrademark Model Composer}. En aquesta memòria també
+    s'aborda l'elecció de la placa FPGA i el disseny de l'arquitectura de
+    programari d'una capa d'arrencada, parada i seguretat.
+}
+
+
+% ----------------------------------------------------------------------
+%  ACKNOWLEDGEMENTS
+
+\newpage
+\section* {Agraïments} 
+{
+    En primer lloc, voldria agrair els consells i el seguiment del supervisor
+    del projecte, Domingo Biel. Les seves puntualitzacions m'han ajudat a tenir
+    una visió més realista del projecte i no perdre el camí. També vull agrair
+    l'ajuda del grup de recerca CITCEA, per les seves suggerències i implicació
+    amb la secció de \emph{Powertrain}.
+
+    En segon lloc, vull agrair a l'equip de BCN eMotorsport, en especial la
+    secció de \emph{Powetrain}, per acollir-me com un membre més des del primer
+    dia i ajudar-me en tot el que necessitès per dur a terme el projecte que
+    amb tanta il·lusió estem aixecant dia a dia quasi sense descans.
+
+    També em sento molt agraït amb tots els mestres i professors que han deixat
+    una empremta en mi, des de primària fins als estudis universitaris.
+
+    \emph{Finalment, no vull olvidar-me des suport incondicional de sa meua familia,
+    en especial es meus pares, es meu germà i na Laia. Sense ells aquest
+    projecte no hauria set possible.}
+}
+
+
+% ----------------------------------------------------------------------
+%  CONTENTS, FIGURES, TABLES AND ACRONYMS
+
+\newpage
+\tableofcontents
+
+\newpage
+\listoffigures
+\begin{quote}
+    \emph{Totes les figures són d'elaboració pròpia, excepte on s'indiqui el contrari. }
+\end{quote}
+\listoftables
+
+\newpage
+\printacronyms[template=tabular, name=Acrònims]
+
+
+% ----------------------------------------------------------------------
+%  SECTIONS
+
+\clearpage \section*{Historial de revisions i registre d'aprovacions}
+\input{ sections/etc/revision_history.tex }
+
+%\clearpage \section*{ Prefaci }
+%\input{ sections/0_prefaci.tex }
+
+\clearpage \section{Introducció}
+\input{ sections/1_introduction.tex }
+
+\clearpage \section{Formula Student i tren de potència}
+\input{ sections/2_formula_student.tex }
+
+\clearpage \section{Marc teòric del control motor}
+\input{ sections/3_control_motor.tex }
+
+\clearpage \section{Disseny i implementació}
+\input{ sections/4_implementacio.tex }
+
+\clearpage \section{Experiments i resultats}
+\input{ sections/5_resultats.tex }
+
+\clearpage \section{Estudi econòmic} %i impacte mediambiental}
+\input{ sections/t_budget.tex }
+
+% \clearpage \section{ Impacte mediambiental }
+% \input{ sections/y_environment.tex }
+
+\clearpage \section{Conclusions}
+\input{ sections/z_conclusions.tex }
+
+\clearpage \section{Treball futur}
+\input{ sections/zz_treball_futur.tex }
+
+
+% ----------------------------------------------------------------------
+%  BIBLIOGRAPHY
+
+\newpage
+\medskip
+\nocite{*}
+\bibliographystyle{IEEEtran}
+\bibliography{ bib/bibliography.bib }
+
+
+% ----------------------------------------------------------------------
+%  APPENDICES
+
+\clearpage
+\begin{appendices}
+{
+    %\section{ Desenvolupament de l'algorisme de SVPWM } 
+    %\input{ appendices/A_theory.tex }
+
+    % \clearpage \section{ Entorn de desenvolupament i flux de treball }
+    % \input{ appendices/B_setup.tex }
+
+    \section{ Variables i constants en coma fixa } 
+    \input{ appendices/fixed_point.tex }
+
+    \clearpage \section{ Informes d'implementació en Vivado } 
+    \input{ appendices/reports.tex }
+
+    % \clearpage \section{ Codi del deserialitzador } 
+    % \input{ appendices/D_code_vhdl.tex }
+
+    % \clearpage \section{ Tests unitaris } 
+    % \input{ appendices/E_unit_tests.tex }
+}
+\end{appendices}
+
+
+% ----------------------------------------------------------------------
+%  THE END :)
+
+\end{document}

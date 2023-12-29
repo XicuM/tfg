@@ -1,0 +1,1952 @@
+<span> </span>
+
+<div class="center">
+
+<span>0.8</span> <span>!</span> <span>[[File:img/0_logos/upc_completo+telecos.png|image]]</span><br />
+
+
+<span> <span> Implementació en FPGA d’un control<br />
+de camp orientat amb debilitament de<br />
+camp per motors IPMSM<br />
+</span> </span>
+
+
+-----
+
+<span> Treball Fi de Grau<br />
+realitzat a<br />
+l’Escola Tècnica d’Enginyeria de Telecomunicació de Barcelona<br />
+Universitat Politècnica de Catalunya<br />
+per<br />
+Francisco Marí Prats </span>
+
+<span> En compliment parcial<br />
+dels requisits per al Grau en<br />
+''Enginyeria Electrònica de Telecomunicació'' </span>
+
+<span> Director: Domingo Biel Solé<br />
+Barcelona, 20 de Juny de 2022 </span>
+
+
+</div>
+<span id="abstract"></span>
+= Abstract =
+
+Permanent magnet synchronous motors (IPMSM) are increasingly used in electric vehicles due to their high power density and efficiency properties. This type of engine involves applying a complex control, which can be implemented in programmable logic with an FPGA.
+
+In this project, a field oriented control (FOC) for IPMSM motors is implemented in FPGA and adapted to be used in a Formula Student racing vehicle. The control incorporates an MTPA (Maximum Torque per Ampere) control strategy with field weakening (FW) and uses Space Vector Modulation as a pulse width modulation generating technique.
+
+Programming and validation of the control algorithm is performed directly on the Matlab/Simulink <sup></sup> environment using VitisModel Composer add-on. This report also addresses the choice of the FPGA board and the design of the software architecture for starting and stopping the engine and providing an extra layer of safety.
+
+<span id="resumen"></span>
+= Resumen =
+
+Los motores síncronos de imanes permanentes (IPMSM) se emplean cada vez más en los vehículos eléctricos debido a su densidad de potencia y eficiencia. El uso de este tipo de motor lleva aparejado la implementación de un control complejo, que puede implementarse en lógica programable con una FPGA.
+
+En este proyecto se adapta y se implementa un control de campo orientado por motores IPMSM en FPGA para su uso en un vehículo de competición de ''Formula Student''. El control incorpora una estrategia de control MTPA (''Maximum Torque per Ampere'') con debilitamiento de campo (''Field Weakening'') y emplea ''Space Vector Modulation'' como técnica generadora de PWM.
+
+La programación y validación por simulación del algoritmo de control se realiza con directamente sobre el entorno Matlab/Simulink<sup></sup>, por medio de la extensión VitisModel Composer. En esta memoria también se aborda la elección de la placa FPGA y el diseño de la arquitectura de software de una capa de arranque, parada y seguridad.
+
+<span id="resum"></span>
+= Resum =
+
+Els motors síncrons d’imants permanents (IPMSM) s’empren cada vegada més en els vehicles elèctrics degut a seva densitat de potència i eficiència. L’ús d’aquest tipus de motor comporta aplicar un control complexe, el qual pot implementar-se en lògica programable amb una FPGA.
+
+En aquest projecte s’adapta i s’implementa un control de camp orientat per motors IPMSM en FPGA pel seu ús en un vehicle de competició de ''Formula Student''. El control incorpora una estratègia de control MTPA (''Maximum Torque per Ampere'') amb debilitament de camp (''Field Weakening'') i empra l’''Space Vector Modulation'' com tècnica generadora de PWM.
+
+La programació i la validació per simulació de l’algorisme de control es realitza amb directament sobre l’entorn Matlab/Simulink<sup></sup> fent ús de l’extensió ''VitisModel Composer''. En aquesta memòria també s’aborda l’elecció de la placa FPGA i el disseny de l’arquitectura de programari d’una capa d’arrencada, parada i seguretat.
+
+<span id="agraïments"></span>
+= Agraïments =
+
+En primer lloc, voldria agrair els consells i el seguiment del supervisor del projecte, Domingo Biel. Les seves puntualitzacions m’han ajudat a tenir una visió més realista del projecte i no perdre el camí. També vull agrair l’ajuda del grup de recerca CITCEA, per les seves suggerències i implicació amb la secció de ''Powertrain''.
+
+En segon lloc, vull agrair a l’equip de BCN eMotorsport, en especial la secció de ''Powetrain'', per acollir-me com un membre més des del primer dia i ajudar-me en tot el que necessitès per dur a terme el projecte que amb tanta il·lusió estem aixecant dia a dia quasi sense descans.
+
+També em sento molt agraït amb tots els mestres i professors que han deixat una empremta en mi, des de primària fins als estudis universitaris.
+
+''Finalment, no vull olvidar-me des suport incondicional de sa meua familia, en especial es meus pares, es meu germà i na Laia. Sense ells aquest projecte no hauria set possible.''
+
+<blockquote>''Totes les figures són d’elaboració pròpia, excepte on s’indiqui el contrari.''
+</blockquote>
+<span id="historial-de-revisions-i-registre-daprovacions"></span>
+= Historial de revisions i registre d’aprovacions =
+
+<div class="center">
+
+<div class="supertabular">
+
+<span>|m<span>2cm</span>|m<span>3cm</span>|m<span>9cm</span>|</span> '''Revision''' &amp; '''Date''' &amp; '''Purpose'''<br />
+<span>0</span> &amp; <span>06/05/2022</span> &amp; <span>Document creation</span><br />
+<span>1</span> &amp; <span>21/06/2022</span> &amp; <span>Document revision</span><br />
+
+
+
+</div>
+
+</div>
+<span> LLISTA DE DISTRIBUCIÓ DEL DOCUMENT </span>
+
+<div class="center">
+
+<div class="supertabular">
+
+<span>|m<span>6cm</span>|m<span>9cm</span>|</span> '''Name''' &amp; '''e-mail'''<br />
+<span>Francisco Marí Prats</span> &amp; <span>francisco.mari.prats@estudiantat.upc.edu</span><br />
+<span>Domingo Biel Solé</span> &amp; <span>domingo.biel@upc.edu</span><br />
+
+
+
+</div>
+
+</div>
+<div class="center">
+
+<div class="supertabular">
+
+<span>|m<span>2cm</span>|m<span>5cm</span>|m<span>2cm</span>|m<span>5cm</span>|</span> &amp;<br />
+<span> Date </span> &amp; <span> dd/mm/yyyy </span> &amp; <span> Date </span> &amp; <span> dd/mm/yyyy </span><br />
+<span> Name </span> &amp; <span> Francisco Marí Prats </span> &amp; <span> Name </span> &amp; <span> Domingo Biel Solé </span><br />
+<span> Position </span> &amp; <span> Autor del projecte </span> &amp; <span> Position </span> &amp; <span> Supervisor del projecte </span><br />
+
+
+
+</div>
+
+</div>
+<span id="introducció"></span>
+= Introducció =
+
+<span id="visió-general"></span>
+== Visió general ==
+
+El projecte realitzat consisteix a implementar un algorisme de control de camp orientat (Field Oriented Control) sobre una placa FPGA per uns motors síncrons d’imants permanents (IPMSM), de manera que es pugui regular la seva velocitat de rotació i moment (torque), i addicionalment, realitzar la programació d’una capa superior de programari encarregada de la arrencada, la parada i la seguretat del control.
+
+El projecte s’emmarca dins d’un projecte més ampli consistent en el disseny i implementació d’un ''Motor drive'' propi per als motors del vehicle de competició CAT15x de l’equip de Formula Sudent BCN eMotorsport. El ''Motor drive'' propi respon a la necessitat de substituir el parell d’onduladors Lenze Mobile DSU 60/60 per una solució més adaptada al vehicle de l’equip.
+
+<span id="especificacions"></span>
+=== Especificacions ===
+
+* La topologia de l’inversor és TLI (''Two level inverter'') amb interruptors MOSFETs SiC (1200 V; 150 A). Inicialment, l’inversor treballa a una freqüencia de 16 kHz.
+* Control de motor IPMSM, quatre motors per vehicle. Tracció a les quatre rodes controlada amb l’algorisme ''Torque Vectoring'' desenvolupat per l’equip.
+* L’estratègia de control és MTPA (Màxim parell per Amper), amb possibilitat de debilitament de camp (Field Weakening, FW) per assolir majors velocitats.
+* Els inversors desenvolupats han de poder ser intercanviables amb els actuals inversors Lenze Mobile DSU 60/60 del vehicle CAT14x.
+
+<span id="objectius"></span>
+== Objectius ==
+
+* L’elecció d’una placa FPGA i un resolver o encoder que permetin implementar el control.
+* El redisseny i la millora de l’algorisme de control inicial desenvolupat per l’equip.
+* La implementació de l’algorisme de control sobre lògica programable en un ''System on Module'' amb FPGA.
+* El disseny i implementació sobre el microcontrolador de la placa del programari necessari per habilitar la recepció de comandes per bus CAN.
+* La validació de les prestacions de l’algorisme de control implementat.
+
+<span id="estat-inicial-del-projecte"></span>
+==  Estat inicial del projecte  ==
+
+<span> Aquest treball parteix d’un estudi previ realtizat per un membre anterior de l’equip, en el qual es decideix i se simula en PLECS<sup></sup>, i posteriorment en Matlab/Simulink<sup></sup>, l’algorisme de control que s’implentarà en aquest projecte. D’aquesta manera, la implementació de l’algorisme en VitisModel Composer i el seu pas a la FPGA ha estat realitzada per l’autor de la memòria, així com la programació de la capa d’arrencada, d’aturada i de control. </span>
+
+<span id="pla-de-treball"></span>
+==  Pla de treball  ==
+
+Es va realitzar un pla de treball a l’inici del projecte per detallar les tasques a realitzar. El pla de treball es va veure modificat lleugerament durant l’escriptura de la revisió crítica amb motiu d’adaptar les tasques al flux de treball real.
+
+<span id="work-breakdown-structure"></span>
+===  Work Breakdown Structure  ===
+
+Per a la traçabilitat de les tasques del projecte, s’ha seguit la metodologia de Work Breakdown Structure, en el que s’agrupen les tasques individuals en blocs de treball realacionats entre si. A continuació es detallarà l’estructura general del <span acronym-label="WBS" acronym-form="singular+short">WBS</span> (figura 1) i els blocs de treball.
+
+<div class="figure">
+
+[[File: img/introduccio/wbs.pdf |566px]]
+
+</div>
+<div class="center">
+
+{| class="wikitable"
+|-
+! style="text-align: left;"| '''WP name:'''
+
+Estudi i investigació prèvia
+
+! style="text-align: left;"| '''WP ref:'''
+|-
+| style="text-align: left;"| '''Short description:'''
+
+En aquest paquet de treball, es realitza un estudi de les prestacions del disseny elaborat per l’equip amb l’objectiu de trobar les seves deficiències i proposar millores o redissenys que incrementin la qualitat del control. Mentrestant, es realitza una investigació per a l’elecció d’una placa FPGA en la qual implementar l’algorisme de control i un resolver o encoder.
+
+| style="text-align: left;"| '''Planned start date:''' <span> 14/03/2022 </span> '''Planned end date:''' <span> 23/04/2022 </span>
+|-
+| style="text-align: left;"| '''Internal task T1:'''
+
+Estudi de les prestacions del disseny inicial
+
+'''Internal task T2:'''
+
+Elecció d’una placa FPGA comercial
+
+'''Internal task T3:'''
+
+Elecció d’un resolver o encoder comercial
+
+| style="text-align: left;"| '''Deliverables:'''
+
+* <span> Model en Simulink (.xls) </span>
+* <span> Figures comentades generades per simulació </span>
+* <span> Fitxers VHDL (.hdl) </span>
+
+|}
+
+
+</div>
+<div class="center">
+
+{| class="wikitable"
+|-
+! style="text-align: left;"| '''WP name:'''
+
+Impementació de l’algorisme
+
+! style="text-align: left;"| '''WP ref:'''
+|-
+| style="text-align: left;"| '''Short description:'''
+
+Aquest paquet de treball consisteix a realitzar el redisseny (si escau) i la implementació, primer en Simulink i després en codi VHDL, de l’algorisme de control.
+
+| style="text-align: left;"| '''Planned start date:''' <span> 28/02/2022 </span> '''Planned end date:''' <span> 13/03/2022 </span>
+|-
+| style="text-align: left;"| '''Internal task T1:'''
+
+Millora i implementació del SVPWM
+
+'''Internal task T2:'''
+
+Millora i implementació de les transformades de Clarke, de Park i de Park inversa, i de les LUTs del sinus, del cosinus, de l’arrel quadrada i de l’arrel quadrada recíproca
+
+'''Internal task T3:'''
+
+Millora i implementació dels controls PI per al control del corrent, Field Weakening i el limitador de torque
+
+'''Internal task T4:'''
+
+Depuració del sistema complet
+
+'''Internal task T5:'''
+
+Millora i implementació del control del resolver
+
+| style="text-align: left;"| '''Deliverables:'''
+
+* <span> Figures comentades generades per simulació </span>
+* <span> Taules comparatives </span>
+
+|}
+
+
+</div>
+<div class="center">
+
+{| class="wikitable"
+|-
+! style="text-align: left;"| '''WP name:'''
+
+Disseny i implementació en microprocessador
+
+! style="text-align: left;"| '''WP ref:'''
+|-
+| style="text-align: left;"| '''Short description:'''
+
+Aquest paquet de treball consisteix a dissenyar, implementar i validar la gestió de la comunicació i altres interrupcions i events sobre el microcontrolador que incorpora la placa FPGA.
+
+| style="text-align: left;"| '''Planned start date:''' <span> 22/04/2022 </span> '''Planned end date:''' <span> 10/05/2022 </span>
+|-
+| style="text-align: left;"| '''Internal task T1:'''
+
+Disseny de la màquina d’estats
+
+'''Internal task T2:'''
+
+Implementació del protocol de comunicació CAN
+
+'''Internal task T3:'''
+
+Validació amb un CAN bus analyzer
+
+| style="text-align: left;"| '''Deliverables:'''
+
+* <span> Diagrama d’estats </span>
+* <span> Codi en C de la màquina d’estats </span>
+* <span> Captures de les trames de comunicació </span>
+
+|}
+
+
+</div>
+<div class="center">
+
+{| class="wikitable"
+|-
+! style="text-align: left;"| '''WP name:'''
+
+Validació de l’algorisme de control en hardware
+
+! style="text-align: left;"| '''WP ref:'''
+|-
+| style="text-align: left;"| '''Short description:'''
+
+En aquest paquet de treball, es validaran les prestacions de l’algorisme de control implementat. La validació es durà a terme en tres fases: una primera en què se simula l’àrea utilitzada i la temportizació mitjançant Vivado, el software del fabricant Xilinx per al desenvolupament amb FPGAs; una segona fase consistent en la validació sobre la placa de potència i finalment una validació en bancada en la que es posa a prova el control dels motors.
+
+| style="text-align: left;"| '''Planned start date:''' <span> 11/05/2022 </span> '''Planned end date:''' <span> 08/06/2022 </span>
+|-
+| style="text-align: left;"| '''Internal task T1:'''
+
+Simulacions en Xilinx Vivado
+
+'''Internal task T2:'''
+
+Validació en placa de potència
+
+'''Internal task T3:'''
+
+Validació en bancada
+
+| style="text-align: left;"| '''Deliverables:'''
+
+* <span> Captures de la simulació </span>
+* <span> Informes autogenerats d’utilització i de temporització </span>
+* <span> Imatge d’arrencada en targeta SD (extensió .bin) </span>
+* <span> Captrues del monitors dels instruments de testeig </span>
+
+|}
+
+
+</div>
+<div class="center">
+
+{| class="wikitable"
+|-
+! style="text-align: left;"| '''WP name:'''
+
+Redacció de la documentació
+
+! style="text-align: left;"| '''WP ref:'''
+|-
+| style="text-align: left;"| '''Short description:'''
+
+Aquest bloc de treball consisteix a recopilar el coneixement generat, ordenar-lo i redactar la documentació requerida.
+
+| style="text-align: left;"| '''Planned start date:''' <span> 28/02/2022 </span> '''Planned end date:''' <span> 19/06/2022 </span>
+|-
+| style="text-align: left;"| '''Internal task T1:'''
+
+Redacció de la proposta de projecte i pla de treball
+
+'''Internal task T2:'''
+
+Redacció de la revisió crítica
+
+'''Internal task T3:'''
+
+Redacció de la memòria final
+
+| style="text-align: left;"| '''Deliverables:'''
+
+* <span> Proposta de projecte i pla de treball </span>
+* <span> Revisió crítica </span>
+* <span> Memòria final </span>
+
+|}
+
+
+</div>
+<span id="fites-i-lliurables"></span>
+===  Fites i lliurables  ===
+
+En aquest apartat s’adjunta una taula amb les fites a assolir i els lliurables corresponents, ordenats temporalment i classificats per bloc de treball i tasques pertanyents.
+
+<div class="supertabular">
+
+<span>|m<span>1.1cm</span>|m<span>1.8cm</span>|m<span>4.3cm</span>|m<span>4.3cm</span>|m<span>2.4cm</span>|</span> '''WP#''' &amp; '''Tasques''' &amp; '''Títol curt''' &amp; '''Fita o lliurable''' &amp; '''Data'''<br />
+<span> 5 </span> &amp; <span> 1 </span> &amp; <span> Redacció de la propsota de projecte i pla de treball </span> &amp; <span> Proposta de treball </span> &amp; <span> Setmana 2 (07/02/2022) </span><br />
+<span> 1 </span> &amp; <span> 1 </span> &amp; <span> Estudi de les prestacions del disseny inicial </span> &amp; <span> Document amb els resultats de les simulacions comentats </span> &amp; <span> Setmana 2 (13/02/2022) </span><br />
+<span> 2 </span> &amp; <span> 1, 2, 3, 4, 5 </span> &amp; <span> Millora i implementació de l’algorisme de control </span> &amp; <span> Document amb els resultats de les simulacions comentats </span> &amp; <span> Setmana 8 (23/04/2022) </span><br />
+<span> 5 </span> &amp; <span> 2 </span> &amp; <span> Redacció de la revisió crítica </span> &amp; <span> Revisió crítica</span> &amp; <span> Setmana 8 (22/04/2022) </span><br />
+<span> 3 </span> &amp; <span> 1 </span> &amp; <span> Disseny de la màquina d’estats </span> &amp; <span> Diagrama d’estats </span> &amp; <span> Setmana 9 (27/04/2022) </span><br />
+<span> 3 </span> &amp; <span> 2, 3 </span> &amp; <span> Implementació i validació del protocol CAN </span> &amp; <span> Document amb les trames de comunicació comentades </span> &amp; <span> Setmana 11 (10/05/2022) </span><br />
+<span> 4 </span> &amp; <span> 1 </span> &amp; <span> Simulacions amb Vivado de Xilinx </span> &amp; <span> Document amb els resultats de les simulacions comentats </span> &amp; <span> Setmana 11 (15/05/2022) </span><br />
+<span> 4 </span> &amp; <span> 2 </span> &amp; <span> Validació en placa de potència </span> &amp; <span> Document amb les figures obtingudes comentades </span> &amp; <span> Setmana 13 (26/05/2022) </span><br />
+<span> 4 </span> &amp; <span> 3 </span> &amp; <span> Validació en bancada </span> &amp; <span> Document amb les figures obtingudes comentades </span> &amp; <span> Setmana 15 (08/06/2022) </span><br />
+<span> 5 </span> &amp; <span> 3 </span> &amp; <span> Redacció de la memòria </span> &amp; <span> Memòria final </span> &amp; <span> Setmana 17 (21/06/2022) </span><br />
+
+
+
+</div>
+<span id="diagrama-de-gantt"></span>
+===  Diagrama de Gantt  ===
+
+A continuació d’adjunta el diagrama de Gantt el projecte, on es pot veure l’evolució en el temps de les tasques.
+
+<div class="figure">
+
+<div class="ganttchart">
+
+<span>1</span><span>17</span>
+
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+
+
+
+</div>
+
+</div>
+<span id="supervisió-del-projecte"></span>
+===  Supervisió del projecte  ===
+
+S’ha realitzat una reunió semanal amb el supervisor del projecte, l’horari de la qual es convenia amb segons la seva disponibilitat.
+
+A part de les reunions de supervisió general, s’han realitzat tres reunions en les dates següents:
+
+<div class="supertabular">
+
+<span>|m<span>10cm</span>|m<span>4cm</span>|</span> '''Reunió''' &amp; '''Data'''<br />
+<span> Revisió de la proposta de projecte i pla de treball </span> &amp; <span> 04/03/2022 </span><br />
+<span> Revisió del document de revisió crítica </span> &amp; <span> 18/04/2022 </span><br />
+<span> Revisió de la memòria final </span> &amp; <span> 21/06/2022 </span><br />
+
+
+
+</div>
+<span id="incidències-i-desviació-del-pla-de-treball-original"></span>
+===  Incidències i desviació del pla de treball original  ===
+
+La primera part del projecte es va executar sense gaires problemes. S’hi destaca una lleugera dificultat a l’hora de depurar l’algorisme de control amb el blockset de Vitis Model Composer en Simulink. En conseqüència, els terminis van quedar bastant ajustats, situant-me just a temps o uns dies per darrere del pla de treball original.
+
+Tanmateix, la segona part del projecte es va desenvolupar d’una manera més accidentada. En primer lloc, s’hi destaca el retràs en la comanda de la FPGA, la qual cosa ha fet bastant difícil que es validès el CAN. Es va provar a simular el CAN en la placa FPGA que ja disposava l’equip sense èxit, degut a problemes de compatibilitat de les eines per instalar Linux.
+
+<span id="continguts-de-la-memòria"></span>
+==  Continguts de la memòria  ==
+
+<span id="capítol-1---introducció"></span>
+===  Capítol 1 - Introducció  ===
+
+<span> Aquest primer capítol ha consistit en una introducció al projecte i la seva importància, així com la presentació dels objectius, especificacions, mètodes, procediments i pla de treball seguits en el desenvolupament del projecte. </span>
+
+<span id="capítol-2---formula-student-i-tren-de-potència"></span>
+===  Capítol 2 - Formula Student i tren de potència  ===
+
+En el segon capítol es realitza una contextualització del projecte de l’inversor propi dins de la competició de Formula Student i la seva importància per l’equip de BCN eMotorsport.
+
+També es descriu la configuració del tren de potència en el vehicle de l’equip, justificant els aspectes tinguts en compte a l’hora de plantejar el projecte.
+
+<span id="capítol-3---estudi-teòric-del-control-motor"></span>
+===  Capítol 3 - Estudi teòric del control motor  ===
+
+<span> En aquest tercer capítol es presenta el desenvolupament teòric del control i s’analitza el model realitzat pels membres de l’equip, previ a la implementació a realitzar en <span acronym-label="FPGA" acronym-form="singular+short">FPGA</span>. </span>
+
+<span id="capítol-4---disseny-i-implementació"></span>
+===  Capítol 4 - Disseny i implementació  ===
+
+<span> En el quart capítol es conduirà el lector pel procés de disseny de la proposta d’implementació i el desenvolupament de la mateixa. Es començarà justificant les decisions presses i es continuarà anlitzant l’estructura final de la implementació, tant a nivell de lògica programable com de programació del microprocessador. </span>
+
+<span id="capítol-5---experiments-i-resultats"></span>
+===  Capítol 5 - Experiments i resultats  ===
+
+<span> En aquest capítol s’exposaran els experiments realitzats per validar la implementació i s’analitzaran els resultats obtinguts. </span>
+
+<span id="capítol-6---estudi-econòmic"></span>
+===  Capítol 6 - Estudi econòmic  ===
+
+<span> En el capítol 6 es despleguen i s’estimen els costos del projecte. </span>
+
+<span id="capítol-7---conclusions"></span>
+===  Capítol 7 - Conclusions  ===
+
+<span> En la conclusió es valora l’evolució del projecte, es posaran en valor els resultats obtinguts i s’hi realitzarà una crítica a la metodologia utilitzada i a altres aspectes de desenvolupament durant el projecte. </span>
+
+<span id="capítol-8---treball-futur"></span>
+===  Capítol 8 - Treball futur  ===
+
+<span> Per últim, en el captítol 8 s’exposaran els passos que es realitzaran després d’acabar el projecte. </span>
+
+<span id="formula-student-i-tren-de-potència"></span>
+= Formula Student i tren de potència =
+
+<span id="introducció-a-la-formula-student"></span>
+==  Introducció a la Formula Student  ==
+
+La Formula Student és una sèrie de competicions automovilístiques en la que participen equips formats per estudiants universitaris arran el món. La competició consisteix a dissenyar i construir un vehicle monoplaça, i té com objectiu final promoure l’excelència entre els estudiants d’enginyeria. D’aquesta manera no es valoren només els resultats esportius, sino també les capacitats tècniques, la justificació del disseny i la viabilitat empresarial de la proposta de negoci que s’elabora de forma paral·lela.
+
+<div class="figure">
+
+[[File: img/2_formula_student/foto_guay.jpg |302px]]
+
+</div>
+La Formula Student va néixer el 1979 de la mà de Mark Marshek, docent de la Universitat de Houston, quan va presentar la idea de realitzar competicions universitàries d’enginyeria al departament de Relacions Educatives de la <span acronym-label="SAE" acronym-form="singular+short">SAE</span>. Poc després, al 1981, es va realitzar la primera edició de la Formula <span acronym-label="SAE" acronym-form="singular+short">SAE</span>, en la qual participaren 6 equips formats per uns 40 estudiants.
+
+La Formula Student ha anat adaptant-se als avenços tecnològics de les últimes dècades. Així, el 2010 es va començar a introduir la mobilitat elèctrica, incorporant-se a la competició com una nova categoria. D’altra banda, el 2016 es va crear la categoria ''Driverless'' per donar cabuda al desenvolupament de la tecnologia de conducció autònoma.
+
+Actualment, existeixen més de 700 equips de Formula Student que participen en els 17 esdeveniments de Formula Student que tenen lloc al voltant del món.
+
+<span id="bcn-emotorsport"></span>
+==  BCN eMotorsport  ==
+
+BCN eMotorsport és l’equip que representa les escoles d’enginyeria de l’<span acronym-label="ETSEIB" acronym-form="singular+short">ETSEIB</span> i l’<span acronym-label="ETSETB" acronym-form="singular+short">ETSETB</span> a les competicions de Formula Student. Cada any l’equip dissenya, fabrica i testeja un vehicle monoplaça de competició.
+
+L’equip és fundat el 2007 per 13 estudiants de l’<span acronym-label="ETSEIB" acronym-form="singular+short">ETSEIB</span>, adoptant el nom de ''<span acronym-label="ETSEIB" acronym-form="singular+short">ETSEIB</span> Motorsport'' i convertint-se en un dels primers equips de Formula Student d’Espanya. En aquell precís moment els seus membres comencen a treballar en el prototip del seu primer vehicle, el CAT01, de combustió interna. L’any 2008 ''<span acronym-label="ETSEIB" acronym-form="singular+short">ETSEIB</span> Motorsport'' participa en la seva primera competició de Formula Student. El 2011, l’equip va començar a competir en categoria elèctrica, sent el primer equip espanyol en fer-ho. Tots els vehicles posteriors han continuat sent elèctrics.
+
+D’altra banda, l’any 2018 sorgeix un nou projecte a l’<span acronym-label="ETSETB" acronym-form="singular+short">ETSETB</span> el primer equip espanyol en participar en categoria autònoma, ''Driverless UPC''. Dos anys després, al 2020, es produeix la fusió dels equips de ''<span acronym-label="ETSEIB" acronym-form="singular+short">ETSEIB</span> Motorsport'' i ''Driverless UPC'', donant lloc a l’equip actual de ''BCN eMotorsport''. 
+
+Any rere any l’equip afegeix innovacions tècniques per millorar el rendiment del vehicle i els resultats a les competicions, entre altres, la implementació de l’algorisme de Torque Vectoring per la tracció a quatre rodes, la incorporació de frenada regenerativa o un algorisme de State of Charge per estimar el nivell de bateria. Aquest any l’equip compleix 15 anys i uns dels projectes que ha pres més força és el projecte de l’inversor propi.
+
+<div class="figure">
+
+[[File: img/2_formula_student/cat14-x.png |264px]]
+[[File: img/2_formula_student/power.png |264px]]
+
+</div>
+Els membres de l’equip es reparteixen en vuit seccions: aerodinàmica, chasis, control del vehicle, dinàmica del vehicle, percepció, electrònica, gestió i tren de potència. Cada una de les seccions s’encarrega del disseny, construcció i testeig d’una part del vehicle, a excepció de gestió, que s’encarrega d’elaborar el pla de negoci i gestionar el pressupost de l’equip.
+
+<span id="introducció-al-tren-de-potència"></span>
+==  Introducció al tren de potència  ==
+
+<div class="figure">
+
+[[File: img/2_formula_student/power.pdf |491px]]
+
+</div>
+El tren de potència d’un vehicle és el sistema encarregat d’emmagatzemar, transformar i entregar l’energia necessària per permetre la seva propulsió. En el cas d’un vehicle elèctric, aquest elements són la bateria, el motor, l’inversor, el cablejat i altres elements de seguretat. En els succesius vehicles elèctrics de l’equip, el tren de potència ha suposat habitualment entre el 45% i el 50% del seu pes, sent la bateria el component més pesat.
+
+<span id="bateria"></span>
+===  Bateria  ===
+
+Per reglament de la Formula Student, el voltatge màxim permès és de 600 V . La capacitat de la bateria es dimensiona estudiant el consum d’energia del vehicle durant la prova de resistència (''Endurance''), en la que el vehicle ha de recòrrer una distància de 22 km sense carregar les bateries . Compta amb un sistema de balanceig passiu per mitjà del <span acronym-label="BMS" acronym-form="singular+short">BMS</span> i un circuit de precàrrega dels que limita el corrent durant la precàrrega dels condensadors de l’inversor, amb el qual és necessari communicar-se mitjançant CAN. Les especificacions de la bateria es recullen a la taula [[#bateria|1]].
+
+<div class="figure">
+
+[[File: img/2_formula_student/bateria.png |340px]]
+
+</div>
+<div id="bateria">
+
+{| class="wikitable"
+|+  Especificacions de la bateria del CAT14x
+|-
+| style="text-align: left;"| '''Especificació'''
+| style="text-align: center;"| '''Valor nominal'''
+| style="text-align: center;"| '''Valor màxim'''
+|-
+| style="text-align: left;"| <span> Voltatge total </span>
+| style="text-align: center;"| <span> <math display="inline">525,4 V</math> </span>
+| style="text-align: center;"| <span> <math display="inline">596,4\ V</math> </span>
+|-
+| style="text-align: left;"| <span> Energia total </span>
+| style="text-align: center;"| <span> <math display="inline">7145,44\ Wh</math> </span>
+| style="text-align: center;"| <span> <math display="inline">8111,04\ Wh</math> </span>
+|-
+| style="text-align: left;"| <span> Potència total </span>
+| style="text-align: center;"| <span> <math display="inline">15,4\ kW</math> </span>
+| style="text-align: center;"| <span> <math display="inline">35,366\ kW</math> </span>
+|-
+| style="text-align: left;"| <span> Disposició de cel·les </span>
+| colspan="2" style="text-align: center;"| <math display="inline">142s2p</math>
+|-
+| style="text-align: left;"| <span> Capacitat total </span>
+| colspan="2" style="text-align: center;"| <math display="inline">13,6\ Ah</math>
+|-
+| style="text-align: left;"| <span> Pes </span>
+| colspan="2" style="text-align: center;"| <math display="inline">35,5\ kg</math>
+|}
+
+
+</div>
+<span id="motor"></span>
+===  Motor  ===
+
+Coneixem com motor elèctric aquell dispisitu capaç de convertir l’energia elèctrica en energia mecànica per mitjà de l’interacció d’elements capaços de generar i interactuar amb camps magnètics, com són els inductors i els imants. Un motor generalment consta de dues parts principals, l’estàtor i el rotor, que són la part fixa i la rotativa, respectivament. Entre els motors existents podem trobar motors que funcionen en continua o en alterna de tres fases o més; aquests últims, poden ser alhora síncrons o asíncrons (si la seva freqüència de rotació coincideix amb la freqüència de l’ona elèctrica que l’alimenta).
+
+El motor utilitzat per l’equip és un motor trifàsic síncron d’imants permanents interiors (<span acronym-label="IPMSM" acronym-form="singular+abbrv">IPMSM</span>). Aquest tipus de motor es carateritza per incorporar imants a l’interior del rotor, a diferència dels SPMSM, que els porten a la superfície del rotor. Els motors <span acronym-label="PMSM" acronym-form="singular+abbrv">PMSM</span> són motors que admeten una densitat de potència molt elevada, en relació amb el seu pes i dimensions. A sobre, els motors IPMSM tenen una eficiencia una mica superior als SPMSM en aprofitar el parell de reluctància i poden assolir velocitats majors degut a que la tècnica de debilitament de camp (FW) és més apropiada amb imants permanents.
+
+<div class="figure">
+
+[[File: img/2_formula_student/motor.png |377px]]
+
+</div>
+<div id="motor">
+
+{| class="wikitable"
+|+  Fitxa tècnica del motor Fischer TI085-052-070-04B7S-07S04BE2
+|-
+| style="text-align: left;"| '''Especificació'''
+| style="text-align: center;"| '''Valor nominal'''
+| style="text-align: center;"| '''Valor màxim'''
+|-
+| style="text-align: left;"| <span> Parell </span>
+| style="text-align: center;"| <span> <math display="inline">11,1\ Nm</math> </span>
+| style="text-align: center;"| <span> <math display="inline">29,1\ Nm</math> </span>
+|-
+| style="text-align: left;"| <span> Corrent eficaç </span>
+| style="text-align: center;"| <span> <math display="inline">22,6\ A_{rms}</math> </span>
+| style="text-align: center;"| <span> <math display="inline">29,1\ A_{rms}</math> </span>
+|-
+| style="text-align: left;"| <span> Velocitat angular </span>
+| style="text-align: center;"| <span> <math display="inline">13250\ rpm</math> </span>
+| style="text-align: center;"| <span> <math display="inline">20000\ rpm</math> </span>
+|-
+| style="text-align: left;"| <span> Potència </span>
+| style="text-align: center;"| <span> <math display="inline">15,4\ kW</math> </span>
+| style="text-align: center;"| <span> <math display="inline">35,366\ kW</math> </span>
+|-
+| style="text-align: left;"| <span> Voltatge bus DC </span>
+| colspan="2" style="text-align: center;"| <math display="inline">600\ V</math>
+|-
+| style="text-align: left;"| <span> Número de parells de pols </span>
+| colspan="2" style="text-align: center;"| 4
+|-
+| style="text-align: left;"| <span> Resistència </span>
+| colspan="2" style="text-align: center;"| <math display="inline">0,126\ \Omega</math>
+|-
+| style="text-align: left;"| <span> Inductància </span>
+| colspan="2" style="text-align: center;"| <math display="inline">0,393\ mH</math>
+|-
+| style="text-align: left;"| <span> Tipus de connexió </span>
+| colspan="2" style="text-align: center;"| Estrella
+|-
+| style="text-align: left;"| <span> Velocitat al parell màxim </span>
+| colspan="2" style="text-align: center;"| <math display="inline">11600\ rpm</math>
+|-
+| style="text-align: left;"| <span> Pes </span>
+| colspan="2" style="text-align: center;"| <math display="inline">4,5\ kg</math>
+|}
+
+
+</div>
+El CAT14x incorpora quatre motors IPMSM comercials de la marca ''Fischer Elektromotoren'', les especificacions del qual es resumeixen en la taula [[#motor|2]]. Disposar de quatre motors permet tenir tracció a quatre rodes (''Four-wheel drive'' o 4WD), la qual està controlada computacionalment per un algorisme de ''Torque Vectoring'' desenvolupat per l’equip i implementat en la unitat de processament (''Processing Unit'', PU) del vehicle.
+
+La mesura de l’angle del rotor respecte a l’estàtor es realitza actualment per mitjà de resolver. Es va barajar la idea de canviar d’un resolver a un encoder, però es decidí finalment continuar amb el resolver. Els resolvers són en general molt més robustos davant EMIs, ja que no disposen d’elements electrònics. No obstant, requereixen d’un circuit d’adequació, en el qual s’implementen amplificadors de senyal i algún sistema de detecció de l’angle i la velocitat angular, com pot ser un PLL (''Phase Loocked Loop''). No obstant això, el requisit de fer intercanviable el nou inversor amb l’actual ha decantat la balança a favor del resolver.
+
+<span id="inversor"></span>
+===  Inversor  ===
+
+Es coneix generalment com inversor, inversor de potència o ondulador al dispositiu encarregat de transferir potència d’una font de tensió continua a una càrrega de alterna. En el cas del vehicle de FS, la potència de la bateria es transfereix a cada un dels quatre motors per mitjà d’inversors.
+
+Els inversors que es fan servir per controlar la velocitat, el torque i/o la posició d’un motor es coneixen a la literatura com ''Motor Drive'' (“conducció de motor”). En aquests casos es considera l’inversor com un component del ''Motor Drive'', en conjunció al motor, el sistema de control electrònic i els diversos sensors que tanquen el llaç de control.
+
+Els ''Motor Drives'' que porta el vehicle d’aquesta temporada 2022, el CAT14x, són els doble inversors Lenze Mobile DSU 60/60, que porten dos inversors cadascun . Aquests inversors estan inicialment concebuts per la seva implementació en autobusos de tracció elèctrica i altres vehicles semblants destinats a la movilitat urbana. Es pot deduir, per tant, que es troba sobredimensionat per a la nostra aplicació particular d’un vehicle de competició que no sobrepassa els 250 kg i està limitat a 80 kW de potència total per reglament .
+
+<div class="figure">
+
+[[File: img/2_formula_student/inverter.png |188px]]
+[[File: img/2_formula_student/inverter2.png |188px]]
+
+</div>
+{| class="wikitable"
+|+  Fitxa tècnica del doble inversor Lenze Mobile DSU 60/60
+|-
+| style="text-align: left;"| '''Especificació'''
+| style="text-align: center;"| '''Mínima'''
+| style="text-align: center;"| '''Nominal'''
+| style="text-align: center;"| '''Màxima'''
+|-
+| style="text-align: left;"| <span> Voltatge bus DC </span>
+| style="text-align: center;"| <span> <math display="inline">100\ V</math> </span>
+| style="text-align: center;"| <span> <math display="inline">800\ V</math> </span>
+| style="text-align: center;"| <span> <math display="inline">848\ V</math> </span>
+|-
+| style="text-align: left;"| <span> Tensió de sortida per fase </span>
+| style="text-align: center;"| <span> <math display="inline">0\ V</math> </span>
+| style="text-align: center;"| <span> - </span>
+| style="text-align: center;"| <span> <math display="inline">510\ V</math> </span>
+|-
+| style="text-align: left;"| <span> Freqüència de sortida </span>
+| style="text-align: center;"| <span> <math display="inline">-599\ Hz</math> </span>
+| style="text-align: center;"| <span> - </span>
+| style="text-align: center;"| <span> <math display="inline">599\ Hz</math> </span>
+|-
+| style="text-align: left;"| <span> Corrent de curtcircuit a l’apagada </span>
+| style="text-align: center;"| <span> - </span>
+| style="text-align: center;"| <span> <math display="inline">96,2\ A</math> </span>
+| style="text-align: center;"| <span> - </span>
+|-
+| style="text-align: left;"| <span> Consum de corrent </span>
+| style="text-align: center;"| <span> - </span>
+| style="text-align: center;"| <span> <math display="inline">39,2\ A</math> </span>
+| style="text-align: center;"| <span> <math display="inline">70,5\ A</math> </span>
+|-
+| style="text-align: left;"| <span> Potència de sortida </span>
+| style="text-align: center;"| <span> - </span>
+| style="text-align: center;"| <span> <math display="inline">20\ kW</math> </span>
+| style="text-align: center;"| <span> <math display="inline">36\ kW</math> </span>
+|-
+| style="text-align: left;"| <span> Corrent de sortida (segons conmutació) </span>
+| style="text-align: center;"| <span> <math display="inline">16\ A\ (16\ kHz)</math> </span>
+| style="text-align: center;"| <span> <math display="inline">28,8\ A\ (8\ kHz)</math> </span>
+| style="text-align: center;"| <span> <math display="inline">51,2\ A\ (2\ kHz)</math> </span>
+|-
+| style="text-align: left;"| <span> Pes </span>
+| colspan="3" style="text-align: center;"| <math display="inline">7,4\ kg</math>
+|-
+| style="text-align: left;"| <span> Dimensions </span>
+| colspan="3" style="text-align: center;"| <math display="inline">310,6 mm \times 354,5 mm \times 75 mm</math>
+|}
+
+El projecte de l’inversor propi apareix com alternativa a l’inversor Lenze Mobile DSU 60/60. Com s’ha comentat, l’inversor es troba sobredimensionat respecte les característiques del vehicle; no obstant, aquest no és l’únic desavantatge.
+
+Tenim per un costat que el funcionament intern dels Lenze és totalment desconegut per l’equip. El fabricant aporta documentació respecte a l’interfície de comunicació i els modes de funcionament, però no acaba d’explicar com aprofitar el rendiment de l’inversor.
+
+Per l’altre costat, el fabricant ha imposat un límit en quan a la freqüència amb la qual es poden enviar i rebre comandes pel bus CAN (uns 50 Hz). Aquesta limitació no permet estudiar amb profunditat el rendiment de l’inversor en els diferents test que es realitzen a bancada i actualment s’hi dedica bastant de temp a ajustar artesanalment els controladors de corrent, a falta d’un millor equip d’instrumentació (torquímetres o generadors de mapes d’eficiència, entre altres).
+
+Respecte a les especificacions del nou inversor, cal mencionar el pas a tecnologia de transistor MOSFET <span acronym-label="SiC" acronym-form="singular+short">SiC</span>, que permeten una freqüència de commutació més elevada que els IGBT de l’inversor actual. En afegit, es preveu que la carcassa protectora (''housing'') del nou inversor reduexi significativament el pes d’aquest component. Malgrat això, segueix sent un projecte bastant arriscat i costós.
+
+<span id="altres-elements-del-tren-de-potència"></span>
+===  Altres elements del tren de potència  ===
+
+Els elements del tren de potència que no han set explicats encara són el <span acronym-label="HVD" acronym-form="singular+short">HVD</span>, la <span acronym-label="DDB" acronym-form="singular+short">DDB</span> i el cablejat:
+
+<ul>
+<li><p>'''<span acronym-label="HVD" acronym-form="singular+long">HVD</span>:''' És un element de seguretat que funciona com un interruptor amb el que s’obre el circuit d’alt voltatge i el de seguretat.</p></li>
+<li><p>'''<span acronym-label="DDB" acronym-form="singular+long">DDB</span>:''' És una capsa en la que es troben components de recolecció de dades sobre l’estat del circuit d’alt voltatge i de distribució. La funció del circuit de distribució és bifurcar en quatre branques, un per cada motor, el bus DC que prové de la bateria. En la <span acronym-label="DDB" acronym-form="singular+short">DDB</span> també es troba el circuit de descàrrega dels condensadors de l’inversor.</p>
+<div class="figure">
+
+[[File: img/2_formula_student/ddb.png |264px]]
+[[File: img/2_formula_student/circuit.png |264px]]
+
+</div></li>
+<li><p>'''Cablejat:''' Pel cablejat del circuit d’alt voltatge es fa servir cablejat blindat Radox de la marca Huber&amp;Suhner. Per normativa, el cablejat ha de ser de color taronja .</p></li></ul>
+
+<span id="marc-teòric-del-control-motor"></span>
+= Marc teòric del control motor =
+
+Per desenvolupar l’algorisme de control es parteix dels models elèctrics del motor i de l’inversor. El tipus de motor a utilitzar defineix certes topologies per l’inversor, que a la seva vegada determina les estratègies de control a emprar. La possibilitat de disposar de sensors de posició i velocitat, la robustesa que es vol assolir i el compromís entre complexitat i rendiment també determinen les estratègies del control.
+
+L’algorisme de control a implementar és de camp orientat (''Field Oriented Control'') amb una estratègia de control MTPA (''Maximum Torque per Ampere''). Amb objectiu de permetre unes velocitats superiors, es fa ús del debilitament de camp (''Field Weakening''). El control de camp orientat requereix una tècnica de modulació per convertir el vector de voltatge a la sortida del controlador en una tensió mesurada en les fases de l’inversor. Per aquesta funció es fa servir el <span acronym-label="SVPWM" acronym-form="singular+abbrv">SVPWM</span>. El diagrama de la figura [[#simple|1]] ens dóna una idea de com es relacionen aquests elements.
+
+<div id="simple" class="figure">
+
+[[File: img/3_control_motor/simple.pdf |529px]]
+
+</div>
+<span id="model-elèctric-del-motor-i-de-linversor"></span>
+==  Model elèctric del motor i de l’inversor  ==
+
+Un motor IPMSM es pot modelar a grans trets com una inductància i una resistència en serie per cada fase. En un motor trifàsic existeixen dos tipus de connexions, en estrella i en triangle. En el nostre cas, el connexionat és en estrella: les tres branques del motor s’uneixen en un punt intermig anomenat punt neutre i simbolitzat amb una <math display="inline">n</math>.
+
+L’equació de voltatges d’un motor síncron en el sistema de referència d-qper al nostre cas ve donada per l’equació 1:
+
+<span> El sistema de referència d-q és un sistema de referència ortogonal bidimensional que es mou solidàriament amb el rotor. L’ús d’aquest sistema de referència linealitza alguns dels càlculs realitzats, que en cas contrari dependrien de la rotació del motor. </span>
+
+<math display="block">\begin{bmatrix} v_d \\[5pt] v_q \end{bmatrix} =
+        \begin{bmatrix}
+            { R + \frac{d}{dt} L_d } & { -\omega L_q } \\[5pt]
+            { \omega L_d } & { R + \frac{d}{dt} L_d }
+        \end{bmatrix}
+        \cdot \begin{bmatrix} i_q \\[5pt] i_d \end{bmatrix}
+        + \begin{bmatrix} 0 \\[5pt] \omega \lambda_{pm} \end{bmatrix}</math>
+
+on,
+
+<div class="description">
+
+<math display="inline">\lambda_{pm}</math> és el flux induït pels imats permanents al llarg de l’eix d-q
+
+<math display="inline">i_d, i_q</math> són les components <math display="inline">d</math> i <math display="inline">q</math> del corrent induït
+
+<math display="inline">v_d, v_q</math> són les components <math display="inline">d</math> i <math display="inline">q</math> del voltatge induït
+
+<math display="inline">L_d, L_q</math> és la inductància del bobinat respecte als eixos <math display="inline">d</math> i <math display="inline">q</math>
+
+<math display="inline">R</math> és la resistència del bobinat
+
+<math display="inline">\omega</math> és la velocitat angular del rotor
+
+
+</div>
+<div class="figure">
+
+[[File: img/3_control_motor/inverter.pdf |453px]]
+
+</div>
+Per conduir un motor trifàsic, l’inversor també ha de ser trifàsic. Cada una de les tres branques consta de dos transistors, formant el que es coneix com ''Half-Bridge''.
+
+La topologia emprada és la de dos nivells (''Two Level Inverter, TLI''). L’elecció de la tipologia està justificada per membres anteriors de l’equip. A grans trets es pot dir que la decisió es basa en els següents factors:
+
+* '''Experiència:''' L’equip disposa d’una experiència més amplia treballant amb inversors de dos nivells amb modulació per <span acronym-label="SVPWM" acronym-form="singular+short">SVPWM</span>, ja que l’inversor Lenze actual presenta aquesta tipologia.
+* '''Bateria:''' En cas d’implementar un inversor multinivell (MLI) la bateria hauria de dividir-se en dos, suposant un treball addicional per l’equip.
+* '''Estudi de pèrdues:''' En l’estudi realitzat per l’equip, l’inversor TLI amb MOSFETs SiC i control per SVPWM va tenir les menors pèrdues per commutaci, aconseguint un aprofitament del bus DC del 90,7% (no obstant, a costa d’una pitjor qualitat d’ona en termes de distorsió harmònica total, <span acronym-label="THD" acronym-form="singular+abbrv">THD</span>).
+* '''Dimensions, pes i cost:''' L’ús d’un inversor multinivell eleva el cost de l’inversor i el fa més voluminós i pesat en fer servir una major quantitat de transistors.
+
+<span id="control-de-camp-orientat"></span>
+==  Control de camp orientat  ==
+
+El control de camp orientat (''Field Oriented Control'', FOC) és una de les tècniques de control més utilitzades quan es treballa amb motors d’imants permanents i motors d’inducció. Consisteix a controlar el corrent del motor una vegada sofert una sèrie de transformades (Park i Clarke) que sincronitzen els corrents amb el gir del rotor. En sincronitzar els corrents es poden aplicar tècniques de control lineal com els controladors proporcional-intregral (PI).
+
+<span id="transformada-de-clarke"></span>
+===  Transformada de Clarke  ===
+
+En un primer lloc, les mesures de corrent de les tres fases del motor (fases a, b i c) s’han de convertir a un sistema de referència de dos fases, formant l’espai estacionari <math display="inline">\alpha</math>-<math display="inline">\beta</math>. Per realitzar aquesta conversió s’empra la transformada de Clarke (o transformada <math display="inline">\alpha</math>-<math display="inline">\beta</math> per la nomenclatura de les seves variables). L’expressió de la transformada de Clarke és la següent:
+
+<math display="block">\begin{bmatrix} \alpha \\[5pt] \beta \\[5pt] \gamma \end{bmatrix} =
+            \begin{bmatrix}
+                \frac{2}{3} & -\frac{1}{3} & -\frac{1}{3} \\[5pt]
+                0 & \frac{1}{\sqrt{3}} & -\frac{1}{\sqrt{3}} \\[5pt]
+                \frac{1}{3} & \frac{1}{3} & \frac{1}{3}
+            \end{bmatrix}
+            \cdot \begin{bmatrix} a \\[5pt] b \\[5pt] c\end{bmatrix}</math>
+
+La transformada de Clarke actua de manera que tots els punts situats sobre la semirrecta que surt de l’origen i creix paral·lela al vector de la fase <math display="inline">a</math>. De la mateixa manera, els punts situats sobre la semirrecta paral·lela a la fase <math display="inline">b</math> passen a caure a sobre la semirrecta a 90º de la fase <math display="inline">a</math>.
+
+Com que el sistema trifàsic es de corrents balancejats, tenim que <math display="inline">i_a
+        + i_b + i_c = 0</math>. Amb això, una de les tres branques de l’inversor (generalment el corrent anotat com <math display="inline">i_c</math>) es torna supèrflua, poguent simplificar així el càlcul de la transformada de Clarke. D’aquesta manera, l’equació implementada en el nostre cas pren la següent forma:
+
+<math display="block">\begin{bmatrix} \alpha \\[5pt] \beta \end{bmatrix}
+            = \frac{2}{3} \cdot
+            \begin{bmatrix}
+                1 & 0 \\[5pt]
+                \frac{1}{\sqrt{3}} & \frac{1}{\sqrt{3}}
+            \end{bmatrix}
+            \cdot \begin{bmatrix} a \\[5pt] b \end{bmatrix}</math>
+
+<span id="transformada-de-park"></span>
+===  Transformada de Park  ===
+
+La següent transformació consisteix a cambiar el sistema de referència que té com vectors unitaris el vector paral·lel a l’eix del motor (conegut per vector directriu, annotat com <math display="inline">d</math>) i el vector perpendicular a aquest (conegut com vector de quadratura, annotat com <math display="inline">q</math>). En paraules llanes, es podria dir que ens muntem a sobre de l’eix del motor i començem a girar-hi solidàriament. És en aquest punt que la dependència amb l’angle desapareix i el valor de corrent resultant captura l’envolvent del senyal sinusoidal original. La transformació que s’empra per l’esmentat canvi és la transformada de Park, l’equació de la qual, en forma matricial, és:
+
+<math display="block">\begin{bmatrix} q \\[5pt] d\\[5pt] 0 \end{bmatrix} = 
+            \begin{bmatrix}
+                cos(\theta) & sin(\theta) & 0 \\[5pt]
+                -sin(\theta) & cos(\theta) & 0 \\[5pt]
+                0 & 0 & 1
+            \end{bmatrix}
+            \cdot \begin{bmatrix} \alpha \\[5pt] \beta \\[5pt] \gamma \end{bmatrix}</math>
+
+Veiem que per aplicar aquesta transformada necessitem el valor de l’angle del rotor. Aquest angle pot ser mesurat directament per mitjà d’un resolver o un encodificador, o d’altra banda es pot estimar a partir de les mesures de corrent fent servir observadors.
+
+<span id="transformada-inversa-de-park"></span>
+===  Transformada inversa de Park  ===
+
+Un cop realitzat el control del corrent en el marc de referència d-q, la tensió obtinguda s’ha de transformar al marc de referència en el que opera el SVPWM, que es el d’<math display="inline">\alpha</math>-<math display="inline">\beta</math>. Per aquesta raó s’aplica la transformada inversa de Park, que s’obtè invertint la matriu de rotació de la transformada de Park:
+
+<math display="block">\begin{bmatrix} \alpha \\[5pt] \beta \end{bmatrix} = 
+            \begin{bmatrix}
+                cos(\theta) & sin(\theta) \\[5pt]
+                sin(\theta) & -cos(\theta) \\[5pt]
+            \end{bmatrix}
+            \cdot \begin{bmatrix} q \\[5pt] d \end{bmatrix}</math>
+
+<span id="maximum-torque-per-ampere"></span>
+==  Maximum Torque per Ampere  ==
+
+L’equació <span acronym-label="MTPA" acronym-form="singular+short">MTPA</span> ens permet obtenir el màxim parell donat un corrent determinat. L’equació es dedueix a partir del parell electromagnètic d’un motor PMSM, que pot ser expressat com:
+
+<math display="block">\tau_{em} = \frac{3}{2}p(\lambda_{pm} i_q + (L_d - L_q) i_d i_q)</math>
+
+on,
+
+<div class="description">
+
+<math display="inline">\tau_{em}</math> és el parell electromagnètic
+
+<math display="inline">\lambda_{pm}</math> és el flux induït pels imats permanents al llarg de l’eix d-q
+
+<math display="inline">i_d, i_q</math> són les components <math display="inline">d</math> i <math display="inline">q</math> del corrent induït
+
+<math display="inline">v_d, v_q</math> són les components <math display="inline">d</math> i <math display="inline">q</math> del voltatge induït
+
+<math display="inline">L_d, L_q</math> és la inductància del bobinat respecte als eixos <math display="inline">d</math> i <math display="inline">q</math>
+
+<math display="inline">R</math> és la resistència del bobinat
+
+<math display="inline">\omega</math> és la velocitat angular del rotor
+
+
+</div>
+Per obtenir un parell màxim, s’han de complir la següent condició d’optimització:
+
+<math display="block">\left\{
+            \begin{aligned}
+                \frac{\partial (\tau_{em} / i_s)}{\partial i_d} = 0 \\
+                \frac{\partial (\tau_{em} / i_s)}{\partial i_q} = 0
+            \end{aligned}
+        \right.</math>
+
+Així, aplicant les condicions a l’equació de torque obtenim el corrent <math display="inline">i_d</math> a injectar a partir del corrent <math display="inline">i_q</math>:
+
+<math display="block">i_d = \frac{-\lambda_m + \sqrt{\lambda_m^2 + 4 (L_d - L_q)^2 i_q^2}}{ 2 (L_d - L_q) }</math>
+
+<span id="debilitament-de-camp"></span>
+==  Debilitament de camp  ==
+
+El debilitament de camp o debilitament de flux (en anglés, ''Field Weakening'') és una tècnica per augmentar la velocitat d’un motor elèctric per damunt de la seva capacitat nominal, a càrreg de reduir el par motor. S’aplica en els casos en què es requereix obtenir una major velocitat i és admisible disposar de menor par motor. És molt utilitzada en motors d’imants pemanents, ja que es troben limitats en velocitat quan la tensió de l’estàtor assoleix el límit de sortida de l’inversor.
+
+El debilitament de camp fa ús dels corrents <math display="inline">i_q</math>i <math display="inline">q_d</math> de l’inversor per contrarrestar el flux magnètic de l’entreferro que generen els imants del rotor. En específic, el control de debilitament de camp consisteix a reduir el flux de l’entreferro resultant associat als imants permanents, <math display="inline">\lambda_{pm}</math>, injectant un corrent <math display="inline">i_d</math> negatiu.
+
+El debilitament de camp es pot implementar trobant la relació entre els corrents i la velocitat en aquest mode de funcionament, o bé tancant un llaç de control amb un controlador PI en el que la consigna sigui el valor de voltatge màxim del bus DC (multiplicat per un factor de seguretat) i la sortida el corrent <math display="inline">i_d</math> necessari per mantenir el bus DC plenament utilitzat.
+
+<span id="modulació-damplada-de-pulsos"></span>
+==  Modulació d’amplada de pulsos  ==
+
+Existeixen diverses tècniques de modulació d’amplada de pulsos. L’objectiu de la modulació d’amplada de pulsos és accionar els transistors de l’inversor per sintetitzar la tensió desitjada a cada una de les branques.
+
+Per a l’inversor de dos nivells les tècniques de modulació es reduixen a la pràctica a la modulació per mitjà de senyal sinusoidal o SPWM (''Sinusoidal Pulse Width Modulation'') i a la modulació per mitjà de vectors espacials o SVPWM (''Space Vectoring Pulse Width Modulation'').
+
+<span id="spwm"></span>
+===  SPWM  ===
+
+La modulació senoidal d’amplada de pulsos (''Sinusoidal Pulse Width Modulation, SPWM'') és una tècnica de generació de PWM consistent a comparar el senyal de voltatge AC de referència amb un senyal portador triangular de freqüència igual a la freqüència de conmutació dels interruptors. Se sol utilitzar per la seva simplicitat a l’hora d’implementar-lo. Quan el senyal de referència es major que el senyal triangular, l’interruptor “high&quot; de la fase s’activa; en cas contrari, s’activa l’interruptor “low&quot;.
+
+<div class="figure">
+
+[[File: img/3_control_motor/spwm.pdf |264px]]
+
+</div>
+<div id="estats" class="figure">
+
+[[File: img/3_control_motor/states_inverter.pdf |548px]]
+
+</div>
+<span id="svpwm"></span>
+===  SVPWM  ===
+
+La modulació d’amplada de pulsos per vectors espacials (SVPWM) empra la representació vectorial de un sistema polifàsic per generar el PWM. A gran trets l’objectiu es descomposar el vector de voltatge de referència en vectors associats a cada un dels estats de commutació d’un inversor. L’ús de la modulació SVPWM permet aprofitar el bus DC molt més que amb la modulació sinusoinal SPWM més tradicional, d’un 90,7% contra un 78,5%.
+
+En un inversor trifàsic, cada branca compta amb un parell de transistors que treballen conjuntament com un commutador (i evitant el curtcircuit del bus DC). En tot moment els bobinats de cada branca del motor estan connectats al pol positiu o el negatiu del bus DC. Com que tenim a la nostra disposició 3 parells de transistors i dos estats posibles per branca, es configuren 8 estats, dos d’ells nuls (estats 0 i 7), ja que no hi ha caiguda de tensió en cap dels bobinats del motor. La configuració dels possibles estats es pot veure en la figura [[#estats|2]].
+
+Podem associar cada un d’aquests estats a un vector en l’espai de referència <math display="inline">\alpha\-\beta</math>, de manera que configuren un hexàgon, caracterísitc del SVPWM, tal i com es representa en la figura [[#hexagon|3]]. Així, es generen 6 sectors diferents delimitats pels vectors dels estats 1 a 6. Els estats 0 i 7, per la seva banda, queden en el centre del sistema de referència.
+
+<div id="hexagon" class="figure">
+
+[[File: img/3_control_motor/SVPWM.pdf |566px]]
+
+</div>
+Si representem el vector de voltatge de referència en aquest marc, podem veure que cau entre dos estats de conmutació. Per tant, podem sintetitzar-lo com la suma dels vectors escalats de les commutacions més properes, més una contribució del vector nul 0 o 7. L’escalat dels vectors és directament proporcional al temps en què l’inversor es troba en aquell estat amb respecte el periode de commutació escollit.
+
+L’algorisme de SVPWM implementat es basa en la identificació del sector per calcular el cicles de treball que s’han de comparar amb el senyal triangular. El sector s’identifica inspeccionant que les components del vector de referència es trobin per damunt o per baix de les tres rectes que formen els vectors dels estats de commutació: <math display="inline">v_b - \sqrt{3} > 0</math>, <math display="inline">v_b < 0</math> i <math display="inline">v_b + \sqrt{3} > 0</math>. Això genera una codificació en binari corresponent als nombres entre el 1 i el 6, que s’han de mapejar als sectors I-VI: <math display="inline">2 \rightarrow I,\ 6 \rightarrow II,\ 4 \rightarrow III,\
+        5 \rightarrow IV,\ 1 \rightarrow V\ i\ 3 \rightarrow VI</math>.
+
+A continuació, es calculen els cicles de treball pel generador de PWM. Aïllant el primer dels sectors (I) en la figura [[#hexagon|3]], es pot treure geomètricament una relació entre el vector de referència i el temps d’encesa de cada estat:
+
+<math display="block">t_1 = \frac{T_s}{V_{dc}} (\frac{3}{2} V_\alpha-\frac{\sqrt{3}}{2} V_\beta);\ \ \ \ \ 
+            t_2 = \sqrt{3} \frac{T_s}{V_{dc}} V_\beta;\ \ \ \ \ 
+            t_0 = T_s - t_1 - t_2</math>
+
+Aquest càlcul es pot aplicar de manera simètrica per la resta dels sectors, tenint en compte la seva posició amb respecte els eixos del sistema de referència <math display="inline">\alpha\-\beta</math>. Definint les variables X, Y i Z, i identificant el sector on ens trobem, podem calcular de manera global els temps <math display="inline">t_1</math>, <math display="inline">t_2</math> i <math display="inline">t_0</math>. Si, a més, considerem que en el sectors impars els temps <math display="inline">t_1</math> i <math display="inline">t_2</math> estan intercanviats respecte els vectors pars, es defineixen uns temps <math display="inline">t_1'</math> i <math display="inline">t_2'</math> en funció de X, Y i Z, que es recullen en la taula de sota.
+
+<math display="block">X = \frac{\sqrt{3}}{2}\frac{\sqrt{3}}{V_{DC}}v_\alpha;\ \ \ \ \ \
+            Y = \frac{1}{2}\frac{\sqrt{3}}{V_{DC}}v_\beta;\ \ \ \ \ \
+            Z = \frac{\sqrt{3}}{V_{DC}}v_\beta</math>
+
+{| class="wikitable"
+|+ Càlcul dels temps d’encesa
+|-
+! style="text-align: center;"| <span>Sector</span>
+! style="text-align: right;"| I
+! style="text-align: right;"| II
+! style="text-align: right;"| III
+! style="text-align: right;"| IV
+! style="text-align: right;"| V
+! style="text-align: right;"| VI
+|-
+| style="text-align: center;"| <math display="inline">t_1'</math>
+| style="text-align: right;"| Z
+| style="text-align: right;"| Y
+| style="text-align: right;"| X
+| style="text-align: right;"| -Z
+| style="text-align: right;"| -Y
+| style="text-align: right;"| -X
+|-
+| style="text-align: center;"| <math display="inline">t_1'</math>
+| style="text-align: right;"| X
+| style="text-align: right;"| -Z
+| style="text-align: right;"| -Y
+| style="text-align: right;"| -X
+| style="text-align: right;"| Z
+| style="text-align: right;"| Y
+|}
+
+Finalment, per obtenir un temps d’encesa per cada fase agrupem els temps <math display="inline">t_1'</math>, <math display="inline">t_2'</math> i <math display="inline">t_0</math> segons el diagrama de la figura [[#encesa|4]]. La seqüència de commutació comença amb <math display="inline">t_0</math>, continua amb <math display="inline">t_1'</math>, segueix amb <math display="inline">t_2'</math> i just abans d’arribar a mig periode, torna a <math display="inline">t_0</math>. Com que el senyal triangular és centrat, el PWM també ho és i per simetria la seqüència es repiteix en sentit contrari fins sumar un periode de commutació. Com que hi han dues aparacions de <math display="inline">t_1'</math> i de <math display="inline">t_2'</math>, el seu valor es divideix per la meitat; mentres que <math display="inline">t_0</math> es divideix entre quatre en aparèixer quatre vegades, de tal manera que se segueix complint <math display="inline">t_1' + t_2' + t_0 = T_s</math>. Així, els valors de l’amplada de cada pols, <math display="inline">t_x</math>, <math display="inline">t_y</math> i <math display="inline">t_z</math>, es calculen com:
+
+<math display="block">t_x = \frac{1}{4}(1-t_1'-t_2');\ \ \ \ \ \
+            t_y = \frac{1}{4}(1-t_1'+t_2');\ \ \ \ \ \
+            t_z = \frac{1}{4}(1+t_1'+t_2')</math>
+
+Per últim, cal assignar el valor de <math display="inline">t_x</math>, <math display="inline">t_y</math> i <math display="inline">t_z</math> a cada una de les fases del commutador, seguint el esquema de la taula següent:
+
+{| class="wikitable"
+|+ Assignació dels temps calculats a cada fase de l’inversor
+|-
+! style="text-align: center;"| <span>Fase</span>
+! style="text-align: right;"| I
+! style="text-align: right;"| II
+! style="text-align: right;"| III
+! style="text-align: right;"| IV
+! style="text-align: right;"| V
+! style="text-align: right;"| VI
+|-
+| style="text-align: center;"| A
+| style="text-align: right;"| <math display="inline">t_x</math>
+| style="text-align: right;"| <math display="inline">t_y</math>
+| style="text-align: right;"| <math display="inline">t_z</math>
+| style="text-align: right;"| <math display="inline">t_z</math>
+| style="text-align: right;"| <math display="inline">t_y</math>
+| style="text-align: right;"| <math display="inline">t_x</math>
+|-
+| style="text-align: center;"| B
+| style="text-align: right;"| <math display="inline">t_y</math>
+| style="text-align: right;"| <math display="inline">t_x</math>
+| style="text-align: right;"| <math display="inline">t_x</math>
+| style="text-align: right;"| <math display="inline">t_y</math>
+| style="text-align: right;"| <math display="inline">t_x</math>
+| style="text-align: right;"| <math display="inline">t_x</math>
+|-
+| style="text-align: center;"| C
+| style="text-align: right;"| <math display="inline">t_z</math>
+| style="text-align: right;"| <math display="inline">t_z</math>
+| style="text-align: right;"| <math display="inline">t_y</math>
+| style="text-align: right;"| <math display="inline">t_x</math>
+| style="text-align: right;"| <math display="inline">t_x</math>
+| style="text-align: right;"| <math display="inline">t_y</math>
+|}
+
+<div id="encesa" class="figure">
+
+[[File: ../img/3_control_motor/encesa.pdf |359px]]
+
+</div>
+<div class="figure">
+
+[[File: img/3_control_motor/duty.pdf |377px]]
+
+</div>
+<span id="altres-elements-de-lalgorisme-de-control"></span>
+==  Altres elements de l’algorisme de control  ==
+
+L’algorisme de control necessita d’altres elements addicionals pel seu funcionament.
+
+El primer d’aquests elements és la detecció de l’angle i la velocitat angular del rotor a partir de les mesures del resolver. Hi ha diverses maneres de realitzar aquesta detecció. Per aquest projecte s’ha decidir emprar un Resolver-to-Digital (<span acronym-label="R/D" acronym-form="singular+abbrv">R/D</span>), que es un circuit integrat específic per digitalitzar les mesures del resolver i que es basa en un sistema de control PLL. El model escollit és l’AD2S1210 del fabricant ''Analog Devices'' .
+
+En segon lloc hi trobem el controlador de velocitat angular. La seva funcionalitat principal és assegurar que la velocitat angular segueix a la consigna variant el valor del parell per mitjà d’una doble saturació.
+
+Per últim, s’han de considerar els elements de limitadors que proporcionen seguretat al control, de manera que les tensions i els corrents no superin els valors màxims imposats pel hardware. D’aquesta manera, trobem saturadors per saturar les referències de corrent <math display="inline">i_d*</math> i <math display="inline">i_q*</math> i un limitador del mòdul de voltatge per saturar les referències de tensió <math display="inline">v_{d,ref}</math> i <math display="inline">v_{q,ref}</math>.
+
+<div id="diagrama" class="figure">
+
+[[File: img/3_control_motor/control.pdf |595px]]
+
+</div>
+<span id="disseny-i-implementació"></span>
+= Disseny i implementació =
+
+En aquest capítol s’exposaran les decisions presses a nivell de disseny, tant d’arquitectura com hardware escollit i programació de la capa de seguretat. Es continuarà amb l’anàlisi dels components de lògica prograble i d’arquitectura de codi desenvolupat.
+
+<span id="proposta-de-disseny"></span>
+==  Proposta de disseny  ==
+
+Per a la implementació del control s’ha decidit utilitzar una arquitectura dual basada en lògica programable i en microprocessador. La decisió d’implementar el control en lògica programable en comptes d’utilitzar una arquitectura basada únicament en microprocessador o FPGA es justifica principalment per tres motius.
+
+En primer lloc, treballar amb una placa d’evaluació que incorpori aquesta arquitectura ens permet tenir més flexibilitat quan al disseny, poguent decidir si implementar un nou component en software o hardware segons evolucioni el projecte. Aquesta major flexibilitat de disseny és força interessant en el projecte de l’inversor, ja que permet, per exemple, la millora constant de l’algorisme de control per part de futurs membres.
+
+En segon lloc, la FPGA permet disposar de paral·lelisme real i temporització precisa, característiques que es tornen molt atractives en augmentar la freqüència de conmutació de l’inversor, sobretot fent servir MOSFETs SiC que poden treballar a altes freqüències. Actualment l’inversor està dissenyat per conmutar a 16 kHz, però la implementació en FPGA permet arribar a freqüències superiors que serien difícils d’assolir implementant l’algorisme de control en microcontrolador o microprocessador. De fet, amb FPGA es pot arribar inclús a aplicar un control en temps real.
+
+Finalment, en últim lloc, l’arquitectura de processador permet un desenvolupament més ràpid de les parts que no necessiten la velocitat i paral·leldismee la FPGA, ja que la descripció de lògica en hardware és més vulnerable a errades de programació i les eines de depuració i simulació no son tan potents com en software. Per aquesta raó es programa en software la interfície d’usuari, la comunicació amb la resta del vehicle i el monitoreig de sensors.
+
+No obstant, s’ha de tenir en compte que l’arquitectura dual també presenta inconvenients. La major contrapartida prové de la dificultat de la programació de la FPGA i la gestió de la comunicació entre la FPGA i el microprocessador. Això es degut principalment a la complexitat i opacitat en quan a documentació de les eines de desenvolupament en FPGA com és Vivado. Aquestes eines són majoritàriament propietàries i tancades; per tant, depenen de la dodumentació lliurada pel fabricant. En conseqüència, es prevenen dificultats en la transmissió del coneixement. És per això que s’ha posat especial interès als fluxos de treball i l’arquitectura de la FPGA, sent aquest un front no totalment resolert en el moment de l’escriptura la memòria.
+
+Seguint aquests motius es decideix utilitzar un SoC que incorpori aquesta arquitectura dual. L’avantatge respecte a un SoM és que en estar tots els dispositius (FPGA, microprocessadors, memòria i inclús ADCs) en un mateix xip la velocitat de comunicació entre aquests és molt reduida, permetent una operació a freqüències més altes. Addicionalment, es millora el consum energètic en ser dispositius més petits associats al mateix xip.
+
+No obstant això, l’equip no compta amb els coneixements ni els recursos per realitzar una placa d’acondicionament i adaptació d’un SoC. Per aquesta raó, es va decantar per utilitzar una placa de desenvolupament comercial.
+
+<span id="placa-de-desenvolupament"></span>
+==  Placa de desenvolupament  ==
+
+A l’inici del projecte, l’equip disposava d’una placa de desenvolupament Diligent Cora Z7-10, basada en el <span acronym-label="SoC" acronym-form="singular+short">SoC</span> Zynq-7010 de Xilinx. Amb aquesta placa es va arribar a realitzar el testeig dels senyals dels Gate Drivers montats en placa  .
+
+<div class="figure">
+
+[[File: img/4_implementacio/cora_mikel.png |302px]]
+[[File: img/4_implementacio/gate_drivers.png |207px]]
+
+</div>
+De cara a una implementació futura de l’inversor, es va decidir substituir la Cora Z7-10 per una placa que facilités el desenvolupament de l’inversor i que millorés la implementació final de l’inversor de cara a l’any vinent. Es volia trobar una placa amb més recursos lògics i un major nombre d’entrades de propòsit general (GPIO) per poder implementar el control pels quatre motors en la mateixa placa. També es va procurar que la documentació fos bona i extensa.
+
+El primer que es va pensar es si continuar amb el mateix fabricant del SoC, Xilinx. Després d’un anàlisi de la competència, es va veure que Xilinx continuava sent la millor opció:
+
+* Es tracta del major fabricant de FPGAs en l’actualitat, amb una quota de mercat per facturació superior al 50%, desbancant als seus competidors com són Altera d’Intel o Lattice. En conseqüència, la comunitat al voltant els seus productes és més extensa i és més senzill trobar recursos de consulta.
+* L’equip ja disposava d’un ''know-how'' de l’ús de les eines de desenvolupament de Xilinx, en específic de la suite Vitis/Vivado<sup></sup>. Es tracten d’eines bastant complexes i intimidants en un principi, però resulten ser potents en quan a funcionalitat.
+
+Finalment es va decidir comprar la Z-Turn del fabricant Make Your Idea Real, que era una de les poques plaques disponibles degut a l’actual falta de stock de components electrònics, en especial semiconductors. Compleix les especifiacions demanades a un preu competitiu. Com que la família de SoC es la mateixa, gran part del ''know-how'' del equip és aplicable a la nova placa .
+
+<div class="figure">
+
+[[File: img/4_implementacio/cora-z7.jpg |264px]]
+[[File: img/4_implementacio/zturn.png |245px]]
+
+</div>
+<div class="supertabular">
+
+<span>|l|l|m<span>4.5cm</span>|m<span>4.5cm</span>|</span> &amp; '''Digilent Cora Z7-10''' &amp; '''MYIR Z-Turn'''<br />
+&amp; <span> Família </span> &amp;<br />
+&amp; <span> Model </span> &amp; <span> Z-7010 XC7Z010 </span> &amp; <span> Z-7020 XC7Z020 </span><br />
+&amp; <span> Microprocessador </span> &amp;<br />
+&amp; <span> Slices </span> &amp; <span> 4.400 </span> &amp; <span> 13.300 </span><br />
+&amp; <span> Blocs <span acronym-label="DSP" acronym-form="singular+abbrv">DSP</span> dedicats </span> &amp; <span> 80 </span> &amp; <span> 220 </span><br />
+&amp; <span> Look-Up tables (LUTs) </span> &amp; <span> 17.600 </span> &amp; <span> 53.200 </span><br />
+&amp; <span> Flip-flops </span> &amp; <span> 35.200 </span> &amp; <span> 106.400 </span><br />
+&amp; <span> Block RAM </span> &amp; <span> 2.1 Mb (60 blocks) </span> &amp; <span> 4.9 Mb (140 blcks) </span><br />
+&amp; <span> Freq. de rellotge màx. </span> &amp;<br />
+&amp; <span> ADC </span> &amp;<br />
+&amp; <span> MB DDR3 SDRAM (16-bit bus) SD card slot </span> &amp; <span> GB DDR3 SDRAM (32-bit bus) SD card slot </span><br />
+&amp; <span> 61x user GPIO 1x USB-UART 1x JTAG for debbuging 1x Ethernet 2x Pmod connectors </span> &amp; <span> 106x user GPIO 1x USB-UART 1x JTAG for debbuging 1x Ethernet 1x CAN 1x HDMI </span><br />
+&amp; <span> 2x Botó polsador 2x RGB LEDs </span> &amp; <span> 1x Botó pulsador 1x RGB LED 1x Bruncidor </span><br />
+&amp; <span> USB Font externa de 5V </span> &amp; <span> USB Font externa de 5V </span><br />
+&amp; <span> <math display="inline">57.9\ mm \times 101.6\ mm</math> </span> &amp; <span> <math display="inline">63.0\ mm \times 102.0\ mm</math> </span><br />
+&amp; <span> 127,45€ </span> &amp; <span> 187,72€ </span><br />
+
+
+
+</div>
+Un cop escollida la placa de desenvolupament, s’ha de decidir en funció dels recursos de hardware disponibles quina part del control es realitza en lògica programable i quina en processador:
+
+* '''Lògica programable:''' Es programarà en l’algorisme de control des de les consignes de velocitat i parell fins a la generació del PWM, inclosa la incorporació del deadtime per als Gate Drivers. Això inclou la lectura de les mesures de corrent que arriben a la placa en forma de PWM i les lectures d’angle i velocitat del resolver.
+* '''Processador:''' Es programarà la màquina d’estats per controlar l’arrencada i la parada del motor, la interfície de testeig en pantalla i la comunicació amb la resta del vehicle per mitjà de bus CAN. Això inclou una comunicació amb la PU per rebre les consignes de velocitat i parell, i la comunicació amb la placa de precàrrega dels condensadors de l’inversor.
+
+<span id="implementació-de-lalgorisme-de-control"></span>
+==  Implementació de l’algorisme de control  ==
+
+Per implementar la lògica programable es decideix utilitzar ''Vitis Model Composer'', una extensió de Matlab/Simulink<sup></sup> que proporciona un ''blokset'' amb el qual descriure i implementar la lògica programable. Anteriorment a 2019, l’eina es comercialitzava baix el nom de ''System Generator'', per la qual cosa encara apareix aquest nom en bastanta documentació. El ''blockset'' incorpora blocs estàndard de <span acronym-label="DSP" acronym-form="singular+short">DSP</span>, com poden ser sumadors-restadors, multiplexors, productes, multiplicacions per constants i look-up tables, a més de diversos blocs per truncar i transformar tipus de dades.
+
+La decisió d’utilitzar aquest entorn ''low-code'' en comptes d’escriure codi en llenguatge de descripció de hardware, per exemple <span acronym-label="VHDL" acronym-form="singular+abbrv">VHDL</span>, es justifica amb una major velocitat de desenvolupament i testeig degut a la integració directa amb Matlab/Simulink<sup></sup>. Es poden fer servir els models desenvolupats amb anterioritat per l’equip per validar el funcionament de la programació. La progamació ''low-code'' pot resultar més atractiva en un principi; no obstant, no eximeix de tenir coneixements de disseny de lògica digital.
+
+La freqüència de rellotge escollida pel sistema és de 10 ns, molt superior al de la freqüència de commutació de l’inversor, de 16 kHz. Això permet temptejar amb un control en temps real, és a dir, sense modelar l’efecte del retard del processament de l’algorisme i millorar les prestacions del control, cosa que seria difícil d’aconseguir amb un microcontrolador.
+
+En quan a tipus numèric a emprar, s’ha decidit fer servir coma fixa, ja que és menys exigent en termes de recursos que la coma flotant; no obstant això, la dificultat de la implentació es veu augmentada en haver de realitzar un seguiment de la mida del tipus numèric en cada bloc implementat. Les mides de la coma fixa utilitzades es recullen a l’annex [[#fixed_point|[fixed_point]]]. Com norma general, s’ha introduit pipelining per tal de reduir el consum dinàmic del control .
+
+En les següents subseccions s’analitzaran els diversos blocs implementats.
+
+<div class="figure">
+
+[[File: img/4_implementacio/control.png |604px]]
+
+</div>
+<span id="controladors-pi"></span>
+===  Controladors PI  ===
+
+L’algorisme fa servir un total de quatre controladors proporcionals-integrals (PI) ajustats manualment. S’ha decicit utilitzar controladors PI en comptes de PID perquè la part derivativa del control pot arribar a comportar-se erràticament en contextes amb molt de soroll. Els PI del control de corrent compten amb ''anti-windup'', ja que en cas contrari els PI calcularien els següents valors sense saber que la seva resposta està saturada. La tècnica de wind-up implementada consisteix a multiplicar per una constant l’error degut a la saturació i sumar-ho a l’acummulador del control integral .
+
+<div class="figure">
+
+[[File: img/4_implementacio/PI_controller_id.png |415px]]
+
+</div>
+<span id="control-de-velocitat"></span>
+===  Control de velocitat  ===
+
+La implementació del control de velocitat es basa en una doble saturació de la consigna de parell. L’estimació del límit superior del parell es realitza amb un controlador PI l’entrada del qual és l’error en la velocitat angular actual.
+
+<div class="figure">
+
+[[File: img/4_implementacio/speed_control.png |529px]]
+
+</div>
+<span id="sinus-i-cosinus"></span>
+===  Sinus i cosinus  ===
+
+Per obtenir el sinus i el cosinus d’un angle donat, necessari per implementar la transformada i la antitransformada de Park, s’ha inclòs una look-up table amb els seus valors i una certa lògica addicional que permet la multiplexació de la lookup table per obtenir simultàniament ambdues funcions trigonomètriques.
+
+<div class="figure">
+
+[[File: img/4_implementacio/sineLUT.png |453px]]
+
+</div>
+<span id="transformades-de-clarke-i-de-park"></span>
+===  Transformades de Clarke i de Park  ===
+
+La implementació de la transformada de Clarke és relativament senzilla, ja que es tracta d’una transformació lineal. Per tant, es pot expressar en termes de sumes i multiplicacions. És convenient recalcar que la multiplicació per una potència de 2 no comporta penalització de recursos de hardware utilitzats, ja que en aritmètica de coma flotant aquesta operació es pot realitzant simplement reinterpretant la posición de la coma fixa.
+
+La transformada de Park, per la seva banda, s’ha implementat amb quatre blocs multiplicadors i 2 blocs sumadors-restadors.
+
+<div class="figure">
+
+[[File: img/4_implementacio/park.png |264px]]
+[[File: img/4_implementacio/clarke.png |264px]]
+
+</div>
+<span id="control-de-corrent"></span>
+===  Control de corrent  ===
+
+Per al control de corrent s’han implementat dos controladors proporcionals-integrals (PI) ajustats manualment. En el mateix bloc també s’han implementat les funcions de desacoblament i de el limitador de voltatge, que limita la magnitud del voltage; així com les corresponents al Field Weakening i el MTPA.
+
+<div class="figure">
+
+[[File: img/4_implementacio/current_control.png |453px]]
+
+</div>
+<span id="field-weakening"></span>
+===  Field Weakening  ===
+
+El debilitament de camp s’implementa com un llaç de control tancat amb un controlador PI semblant als del control de corrent. No obstant, compta amb una condició inicial que ha de complir per activar el seu funcionament. Per tal d’activar el Field Weakening, per una banda, la velocitat ha de ser superior a la velocitat base, que és de 9000 rpm, i per l’altra, el voltatge de referència calculat ha de ser superior al de bus DC. Aquest bloc es pot desactivar si el senyal FW.activate es posa a 0.
+
+<div class="figure">
+
+[[File: img/4_implementacio/fw.png |529px]]
+
+</div>
+<span id="mtpa-i-generació-de-la-referència-i_d"></span>
+===  MTPA i generació de la referència <math display="inline">i_d*</math>  ===
+
+El bloc de generació de la referència de corrent <math display="inline">i_d*</math> rep a les entrades del llaç de voltatge del Field Weakening i realitza el càlcul del MTPA. L’equació de MTPA s’ha implementat per mitjà d’una look-up table i, a l’igual que el bloc de FW, compta amb un multiplexor per activar o desactivar aquesta estratègia de control.
+
+<div class="figure">
+
+[[File: img/4_implementacio/mtpa.png |453px]]
+
+</div>
+<span id="space-vector-modulation"></span>
+===  Space Vector Modulation  ===
+
+En la figura [[# svpwm_fpga |6]] es pot veure que s’han agrupat el diferents blocs per funcionalitat. Així, a la part superior, tenim la identificació del sector com tres condicions i un bloc concatenador; baix a l’esquerra estàn els multiplicadors que realitzen la normalització del vector de referència; a la seva dreta, es troben els blocs amb els quals obtenim les variables X, -X, Y, -Y, Z i -Z, i finalment els blocs generadors dels temps <math display="inline">t_1'</math>, <math display="inline">t_2'</math> i <math display="inline">t_0</math>, associent-los a la fase corresponent de l’inversor per mitjà de tres multiplexors.
+
+<div id=" svpwm_fpga " class="figure">
+
+[[File: ../img/4_implementacio/sv.png |604px]]
+
+</div>
+<span id="generació-de-pwm"></span>
+===  Generació de PWM  ===
+
+Per generar els senyals de commutació del transistor es comparen els tres cicles de treballs aconseguits mitjançant la modulació SV amb una portadora triangular. Cada comparació dóna lloc a dos senyals PWM contraposats, una l’inversa de l’altre, que corresponen als temps d’encesa i d’apagada dels dos transistors d’una fase de l’inversor. És important generar un petit temps entre els flancs de pujada i de baixada de les tensions de porta del transistors, ja que els pendents no són ideals; és el que es coneix com ''deadtime''. En el nostre cas, implementem un ''deadtime'' d’<math display="inline">1 \mu s</math>.
+
+<div class="figure">
+
+[[File: img/4_implementacio/triangular.png |264px]]
+[[File: img/4_implementacio/pwm.png |264px]]
+
+</div>
+<span id="implementació-de-la-lògica-programable"></span>
+==  Implementació de la lògica programable  ==
+
+Un cop validat l’algorisme de control en ''Matlab/Simulink<sup></sup>'', s’exporta el model a IP de ''Vivado'', l’eina de Xilinx per a la programació de les seves FPGAs. Les IP (''Intelectual Property'') de ''Vivado'' són subsistemes desenvolupats en aquesta eina que poden ser emprats en altres projectes. Xilinx disposa d’una extensa llibreria d’IPs que poden ser utilitzades per reduir l’esforç de disseny i el ''time to market''.
+
+Directament des del bloc ''System Generator'' de ''Vitis Model Composer'' es pot afegir la configuració per generar IPs. En tenir-ho, s’ha d’integrar la IP en un projecte de ''Vivado''. Per provar les funcionalitats de l’algorisme de control sobre la placa, s’ha realitzat el següent disseny de blocs de Vivado:
+
+<div class="figure">
+
+[[File: img/4_implementacio/vivado.png |585px]]
+
+</div>
+En el cantó superior esquerra es troba el bloc que configura el processador del SoC Zynq. Just a la dreta del bloc de reset es troba el bloc que permet l’ús del bus <span acronym-label="AXI" acronym-form="singular+short">AXI</span> de comunicació entre la lògica programable i el processador. Per configurar els registres del bus <span acronym-label="AXI" acronym-form="singular+short">AXI</span> es fa servir l’IP customitzada ''control3_axi'' que actua com un perifèric del bus <span acronym-label="AXI" acronym-form="singular+short">AXI</span>. Finalment, a la dreta tenim el bloc generat mitjançant l’eina ''Vitis Model Composer'' i que conté l’algorisme desenvolupat.
+
+Seguint el flux de treball de Vivado, s’ha de realitzar la síntesi i la implementació del disseny. Els resultats de la implementació s’adjunten a l’annex [[#vivado|[vivado]]].
+
+<span id="implementació-del-sistema-darrencada-i-parada"></span>
+==  Implementació del sistema d’arrencada i parada  ==
+
+El sistema d’arrencada i parada s’ha implementat com una aplicació escrita en llenguatge C++ que corre a sobre d’una distribució específica de Linux.
+
+<span id="linux"></span>
+===  Linux  ===
+
+La distribució implementada per al projecte es coneix com PetaLinux, està desenvolupada per Xilinx i és específica dels SoCs de la família Zynq-7000.
+
+Linux permet abstreure el desenvolupament d’aplicacions del hardware que el suporta. Això es converteix en un avantatge si es vol aconseguir flexibilitat en quan a implementació, cosa ques es donaria, per exemple, si es vol canviar de SoC en un futur. Linux també permet una progamació concurrent “multithreading&quot; estàndard i ben definida .
+
+No obstant això, al contrari del que pensava l’autor, la implementació de Linux ha acabat resultant tot un repte. El principal impediment que s’ha trobat és trobar la configuració adequada dels fitxers de construcció de PetaLinux, ja que per una part les imatges del sistema operatiu per la Cora Z7-10 no són modificables amb la última versió de PetaLinux, i per l’altre, la versió antiga de PetaLinux compta amb moltes dependències que requereixen versions antigues i difícils de trobar.
+
+<span id="c"></span>
+===  C++  ===
+
+La programació d’aplicacions en Embedded Linux es realitza tradicionalment en llenguatge C o C++. Se solen utilitzar aquest dos llenguatges de programació perquè són ràpids, robustos (gràcies en part al tipificat estàtic) i la API del kernel de Linux està escrita en C.
+
+Entre aquestes dues opcions s’ha escollit el llenguatge de programació C++, ja que funciona com un superconjunt de C, admet diferents paradigmes de programació, compta amb una bona llibreria estàndard i té una gestió de les excepcions interessant.
+
+En C++, la idea original al darrere de la progamació orientada a objectes era crear tipus propis que extenguesin les capacitats dels tipus encastats (''Built-in types''). En paraules del creador de C++, Bjarne Stroustrup, “For me, the key idea was basically I could get my own types, and that’s the idea that goes for into C++, where I can get more better types, more flexible types and more efficient types.” 
+
+Seguint aquesta filosofia, s’han definit les classes State i Register, que representen un estat de la màquina d’estats i un registre AXI de la FPGA, respectivament, i que es comporten com tipus encastats en haver-hi sobrecarregat els operadors (''operator overload'').
+
+La programació orientada a objectes també aporta modularitat al desenvolupament de l’aplicació. En el nostre cas, la modularitat ha permès encapsular la gestió de la màquina d’estats i d’una interfície d’usuari en classes diferents. La interfície d’usuari està pensada per realitzar tests amb la placa d’una manera sencilla i eficient. Amb l’encapsulació en classes es fa possible intercanviar la interfície d’usuari per pantalla per una interfície de comunicació basada en CAN o inclús en Ethernet.
+
+Addicionlment, C++ compta amb una gestió de les excepcions força interessant, a diferència de C. No obstant és una eina que ha d’emprar-se només en casos excepcionals, ja que cada cop que es llença i captura una exepció, el programa torna a l’estat que tenia abans d’entrar en l’espai encapçalat per <code>try</code> i delimitat entre claudàtors.
+
+<span id="arquitectura-desenvolupada"></span>
+===  Arquitectura desenvolupada  ===
+
+Es fa servir el concepte extès de la màquina d’estats finita en software per controlar el flux del programa d’arrencada i d’aturada del motor. Els estats de la màquina d’estats es mostra en la figura [[#fms_uml|7]]
+
+<div id="fms_uml" class="figure">
+
+[[File: img/4_implementacio/state_machine.png |377px]]
+
+</div>
+<span id="main"></span>
+==== Main ====
+
+<span> Representa el programa principal. En aquest mòdul s’hi defineix la funció principal del programa, en la que s’initzializen els registres AXI i es generen els ''threads'' amb els ''handlers'' de la màquina d’estats i la interfície de terminal, <code>state\_loop()</code> i <code>terminal\_loop()</code>, respectivament. </span>
+
+<span id="state"></span>
+==== State ====
+
+En aquest mòdul s’han incorporat els mòduls relacionats amb la màquina d’estats. La instància de la classe ''State'' representa un estat de la màquina d’estats. S’ha utilitzat una enumeració per descriure els estats. L’assignació de l’estat actual es realitza per mitjà de l’<code>operator=()</code>. La seva implementació té en compte les possibles transicions i llança una excepció en el cas que es forci una transició que no és possible. El bucle que defineix la màquina d’estats s’ha implementat a la funció <code>state_loop()</code>.
+
+<div class="figure">
+
+[[File: img/4_implementacio/uml_state.png |283px]]
+
+</div>
+<span id="terminal"></span>
+==== Terminal ====
+
+En aquest mòdul s’hi defineix la interfície d’usuari amb el programa, en la qual l’usuari escriu les comandes per operar l’inversor. De manera paral·lela al mòdul State, s’ha creat una enumeració, en aquest cas amb les comandes possibles i una funció <code>terminal_loop()</code>.
+
+Així, les comandes <code>Terminal::START</code> i <code>Terminal::STOP</code> marquen el pas dels estats <code>State::IDLE</code> a <code>State::START</code> i de <code>State::PROCESS</code> a <code>State::STOP</code>, respectivament. La comanda <code>Terminal::EDIT</code> permet editar el valor dels registres AXI realitzant una cridada al programa de Linux <math display="inline">vi</math>. D’altra banda, les comandes <code>Terminal::SPEED</code> i <code>Terminal::TORQUE</code> permeten variar el valor de la velocitat i el parell durant l’estat <code>State::PROCESS</code>. Finalment, <code>Terminal::HELP</code> mostra un missatge d’ajuda i <code>Terminal::UNKNOWN</code> és seleccionat en el cas que s’introdueixi una comanda no reconeguda.
+
+<div class="figure">
+
+[[File: img/4_implementacio/uml_terminal.png |283px]]
+
+</div>
+<span id="register"></span>
+==== Register ====
+
+En aquest mòdul es defineixen, les classes Register i Sensor. La classe Register és una implementació a més alt nivell d’un registre del <span acronym-label="SoC" acronym-form="singular+short">SoC</span>, en el que les lectures i les escriptures es converteixen de coma flotant a coma fixa i a l’inrevés, per a la seva interpretació per l’algorisme de control. La classe Sensor conté un Registre i en afegit incorpora la lògica per parar el funcionament de l’algorisme en cas que el sensor detecti que un registre sobrepassa un valor determinat, per exemple, de temperatura, voltatge o corrent.
+
+<div class="figure">
+
+[[File: img/4_implementacio/uml_register.png |415px]]
+
+</div>
+<span id="subroutines"></span>
+==== Subroutines ====
+
+En aquest mòdul es defineixen les subrutines com funcions. Cada una d’elles realitza una sèrie de tasques, relacionades amb l’inversor. Aquestes subrutines no están implementades en el moment de l’escriptura de la memòria; sino que llençen una excepció notificant que no estan implementades. Les subrutines són les següents:
+
+* <code>void init_AXI_registers()</code>: Initialitza els registres AXI de la lògica programable amb els valors emmagatzemats a l’arxiu de paràmetres ''param.txt''. Es crida quan s’inicia el programa i cada cop que s’actualitza el contingut de ''param.txt''.
+* <code>void reset_pi_controllers()</code>: Activa el senyal de reset dels blocs acumuladors dels controladors PI. És una rutina bastant important que es realitza.
+* <code>void precharge()</code>: Es comunica per bus CAN amb el microcontrolador de la placa de precàrrega dels condensadors per notificar la intenció d’iniciar el funcionament del motor i començar a precarregar-los. Aquesta funció bloqueja la màquina d’estats fins que acaba la precàrrega i rep el senyal d’acabada.
+* <code>void discharge()</code>: De manera semblant a la funció <code>void precharge()</code>, estableix comunicació amb el circuit de descàrrega, comença a descarregar els condensadors i es bloqueja fins que acaba la descàrrega, moment en el que rep el senyal d’acabada.
+* <code>void open_logic_IO()</code> i <code>void close_logic_IO()</code>: Aquestes funcions obren i tanquen els registres d’entrada i de sortida de la lògica programable per iniciar el flux de senyal a través de l’algorisme o per tancar-lo.
+* <code>void change_speed(float speed)</code> i <code>void change_torque(float torque)</code>: Aquestes funcions canvien la consigna de velocitat i torque de l’algorisme de control, respecivament, sempre que el sistema es trobi en l’estat <code>State::PROCESS</code>.
+* <code>void smooth_stop()</code>: Realitza el protocol d’acabada suau per evitar que el control finalitzi amb un esglaó.
+
+<span id="utils"></span>
+==== Utils ====
+
+El mòdul Utils conté funcions i classes relacionades amb el flux del programa com són la classe Log i la funció exit program. En instanciar un objecte de la classe Log es mostra per pantalla informació, errors o advertències, i són habitualment llençades com com excepcions. En el mateix mòdul estàn definides les macros INFO, WARNING i ERROR per simplificar la seva implementació en el codi. D’altra banda, la funció <code>exit_program()</code> comença a gestionar la sortida del programa en el cas que sigui possible. També és utilitzada per sobreescriure el ''handlers'' dels senyals SIGNINT i SIGNTERM per evitar sortides del programa accidentals.
+
+<div class="figure">
+
+[[File: img/4_implementacio/uml_log.png |143px]]
+
+</div>
+<span id="comunicació-can"></span>
+==  Comunicació CAN  ==
+
+La comunicació pel bus CAN es realitza per mitjà del connector CAN de la placa Z-Turn. El packet SocketCAN del kernel de Linux proporciona els drivers necessaris per implementar diferents protocols de comunicació per CAN. La <span acronym-label="API" acronym-form="singular+short">API</span> de SocketCAN per programar en C/C++, Linux-CAN, està basada en la Berkeley socket API, que té com avantatges ser independent del hardware i ser un estàndard prou utilitzat, amb la qual cosa es pot aprofitar l’extensa documentació al respecte per programar aplicacions com poden ser els populars servidors i clients TCP/IP  .
+
+S’ha dissenyat una prova per validar la implementació de CAN. Malauradament, el retràs en la comanda de la placa de la FPGA ha dificultat la validació de la comunicació per CAN, ja que la placa Cora Z-7 de la que es disposa no compta amb connector CAN i s’ha d’adaptar amb un hardware específic adicional (PmodCAN) que no està previst fer servir per la implementació de l’inversor.
+
+Per començar a desenvolupar amb la llibreria Linux-CAN, en un primer lloc, s’ha d’incloure la llibreria <code>#include &lt;linux/can.h&gt;</code>. Un cop iniciat, s’ha de crear i configurar un descriptor de fitxer (''file descriptor'') mitjançant la crida a la funció <code>socket()</code>, <code>setsockopt()</code> i <code>ioctl()</code>. Després de lligar el descriptor de fitxer a l’adreça del CAN amb <code>bind()</code>, ja es pot començar a enviar dades amb les crides a <code>write()</code> i <code>read()</code>.
+
+<span id="experiments-i-resultats"></span>
+= Experiments i resultats =
+
+Els experiments per validar la implementació de l’algorisme han estat limitats per diferents factors. En primer lloc, ha estat difícil aconseguir una bona validació del funcionament de l’algorisme en Simulink perquè les simulacions són bastant lentes, degut a que Vitis Model Composer imposa un període del solver igual o inferior al període de rellotge escollit. Una solució possible és realitzar un model del motor en FPGA a mode de ''hardware in the loop''. Malauradament, es decidí no implementar aquest experiment en l’abast d’aquest projecte i provar d’implementar el control directament sobre la FPGA i realitzar les proves directament amb les plaques de potència, cosa que finalment no s’ha aconseguit.
+
+<span id="test-unitaris"></span>
+==  Test unitaris  ==
+
+S’han realitzat una sèrie de tests unitaris de diversos components de l’algorisme per testejar el seu funcionament.
+
+<span id="sinus-i-cosinus-1"></span>
+==== Sinus i cosinus ====
+
+S’introdueix un senyal dent de serra a l’entrada del subsistema i es compara el resultat amb un bloc de generació de sinus i cosinus nadiu de Simulink. La freqüència del senyal a l’estrada és molt major a la que s’emprarà en realitat; però, ens permet fer-nos una idea del retard (delay) de l’operació i de la resolució temporal, en el nostre cas dos vegades el periode de rellotge del sistema.
+
+<div class="figure">
+
+[[File:img/5_resultats/sineLUT_test.png|302px]]
+
+</div>
+<span id="senyal-triangular"></span>
+==== Senyal triangular ====
+
+Es pot veure en aquest test que senyal triangular del PWM es genera a la freqüència correcta i l’amplitud en coma fixa s’intrpreta correctament.
+
+<div class="figure">
+
+[[File:img/5_resultats/triangular.png|302px]]
+
+</div>
+<span id="svpwm-1"></span>
+==== SVPWM ====
+
+Per a la prova del SVPWM, s’introduix com entrada dos senyals sinusoidals desfasats 90º. Simulem així un vector espacial de magnitud i frqüència de rotació constant i obtenim la forma d’ona característica de l’SVPWM.
+
+<div class="figure">
+
+[[File:img/5_resultats/sv_test.png|264px]]
+[[File:img/5_resultats/sv_test2.png|264px]]
+
+</div>
+<span id="limitador-de-voltatge"></span>
+==== Limitador de voltatge ====
+
+S’excita el bloc amb un senyal en rampa de <math display="inline">v_d</math> i <math display="inline">v_q</math> i s’observa que es limita el voltatge quan la magnitud del vector <math display="inline">v</math> supera els <math display="inline">\frac{V_{DC}}{\sqrt{3}}</math>.
+
+<div class="figure">
+
+[[File:img/5_resultats/limitador.png|283px]]
+
+</div>
+<span id="simulacions-de-lalgorisme-complet"></span>
+== Simulacions de l’algorisme complet ==
+
+En aquest subapartat s’analitzen les prestacions de l’algorisme de control implementat en el seu conjunt. Per provar la implementació realitzada es substitueix l’algorisme en el model de Simulink desenvolupat per l’equip. El model de l’inversor és el commutat i el model de l’inversor s’implementa a partir de les equacions del motor en el sistema de referència <math display="inline">d\-q</math>. És per això que s’implementen la transformada i la transformada inversa de Park a l’interior del subsistema del motor.
+
+<div class="figure">
+
+[[File:img/5_resultats/control.png|415px]]
+
+</div>
+<span id="resultats-de-la-simulació"></span>
+===  Resultats de la simulació  ===
+
+Si realitzem una simulació de la implementació del control en Simulink, podem veure com obtenim una rotació accelerada del rotor.
+
+<div class="figure">
+
+[[File:img/5_resultats/angle.png|226px]]
+
+</div>
+Per accelerar lleugerament la simulació, feim una decimació dels punts emmagatzemats per Simulink. Obtenim els resultats següents:
+
+<div class="figure">
+
+[[File:img/5_resultats/test.png|377px]]
+
+</div>
+<div class="figure">
+
+[[File:img/5_resultats/Untitled.png|302x188px]]
+
+</div>
+<span id="estudi-econòmic"></span>
+= Estudi econòmic =
+
+El pressupost total del projecte s’adjunta en la taula de sota. En el projecte s’ha utilitzat tant la llicència d’estudiant de Matlab que proporciona la UPC als seus estudiant com el període de prova de Vitis Model Composer de 3 mesos. Així, es considera en la taula el cost que tindria el projecte sense tenir en compte aquests conceptes.
+
+{| class="wikitable"
+|+ Cost del projecte
+|-
+! style="text-align: left;"| '''Concepte'''
+! style="text-align: right;"| '''Preu'''
+! style="text-align: left;"| '''Amortització'''
+! style="text-align: left;"| '''Temps'''
+! style="text-align: right;"| '''Cost total'''
+|-
+| style="text-align: left;"| MYIR Z-Turn
+| style="text-align: right;"| 187,72€
+| style="text-align: left;"| -
+| style="text-align: left;"| -
+| style="text-align: right;"| 187,72€
+|-
+| style="text-align: left;"| Portàtil MSI Leopard GP65
+| style="text-align: right;"| 1299€
+| style="text-align: left;"| 1 mes
+| style="text-align: left;"| 4 mesos
+| style="text-align: right;"| 108,25€
+|-
+| style="text-align: left;"| Llicència Matlab
+| style="text-align: right;"| 800€/any
+| style="text-align: left;"| 1 any
+| style="text-align: left;"| 4 mesos
+| style="text-align: right;"| 266,67€
+|-
+| style="text-align: left;"| Llicència Vitis Model Composer
+| style="text-align: right;"| 700€
+| style="text-align: left;"| 3 anys
+| style="text-align: left;"| 3 mesos
+| style="text-align: right;"| 43,75€
+|-
+| style="text-align: left;"| Sou enginyer
+| style="text-align: right;"| 10€/h
+| style="text-align: left;"| -
+| style="text-align: left;"| 450 h
+| style="text-align: right;"| 4.500€
+|-
+| style="text-align: left;"|
+| style="text-align: right;"|
+| style="text-align: left;"|
+| style="text-align: left;"| <span>'''Total'''</span>
+| style="text-align: right;"| <span>5106,39€</span>
+|-
+| style="text-align: left;"| <span>4-5</span>
+| style="text-align: right;"|
+| style="text-align: left;"|
+| style="text-align: left;"|
+| style="text-align: right;"|
+|}
+
+Per aquest projecte també es considera rellevant realitzar una traçabilitat del programari emprat. D’aquesta manera, s’adjunta el Software Bill of Materials en la forma de taula [[#sbom|3]].
+
+<div id="sbom">
+
+{| class="wikitable"
+|+  Software Bill of Materials
+|-
+! style="text-align: left;"| '''Programari'''
+! style="text-align: left;"| '''Versió'''
+! style="text-align: left;"| '''Llicència'''
+! style="text-align: left;"| '''Copyright'''
+|-
+| style="text-align: left;"| Matlab/Simulink
+| style="text-align: left;"| 2022a
+| style="text-align: left;"| Entorn de simulació
+| style="text-align: left;"| MathWorks
+|-
+| style="text-align: left;"| Vivado
+| style="text-align: left;"| 2021.2
+| style="text-align: left;"| Disseny i implementació de lògica programable per FPGAs de Xilinx
+| style="text-align: left;"| AMD (Xilinx)
+|-
+| style="text-align: left;"| Vitis
+| style="text-align: left;"| 2021.2
+| style="text-align: left;"| IDE de Xilinx basat en Eclipse
+| style="text-align: left;"| AMD (Xilinx)
+|-
+| style="text-align: left;"| Vitis Model Composer
+| style="text-align: left;"| 2021.2
+| style="text-align: left;"| Extensió de Simulink
+| style="text-align: left;"| AMD (Xilinx)
+|-
+| style="text-align: left;"| PetaLinux
+| style="text-align: left;"| 2017.4
+| style="text-align: left;"| Distribució de Linux per la familia de SoCs ZYNQ-7000
+| style="text-align: left;"| AMD (Xilinx)
+|-
+| style="text-align: left;"| CMake
+| style="text-align: left;"| 3.16.3
+| style="text-align: left;"| Generació de Makefiles per compilar C++
+| style="text-align: left;"| Kitware Inc.
+|-
+| style="text-align: left;"| G++
+| style="text-align: left;"| 9.4.0
+| style="text-align: left;"| Eina de compilació de C++
+| style="text-align: left;"| Free Software Foundation Inc.
+|}
+
+
+</div>
+<span id="conclusions"></span>
+= Conclusions =
+
+En aquesta memòria s’ha explicat i analitzat el procés d’implementació d’un control per ''Motor drive'' en FPGA i de la capa de seguretat addicional, posant especial èmfasi a les decisions presses en cada moment i com s’ha anat desenvolupant el projecte en conseqüència.
+
+El projecte va iniciar-se amb bon peu en un principi. En la fase intermitja es varen trobar algunes dificultats en la depuració del model en Vitis Model Composer, en gran part pels temps de simulació elevats. Es va poder completar aquest apartat; no obstant, els resultats obtinguts no acaben de ser totalment rigurosos. En el cas d’haver-hi dedicat un temps addicional a l’experimentació i l’anàlisi dels resultats en comptes de continuar amb la capa de programari, es podria haver acabat de validar completament l’algorisme en FPGA. No obstant, es decidí seguir amb el pla de treball original, ja que en el moment de realitzar la revisió crítica es va subestimar la magnitud del treball necessari per programar la capa d’arrencada, parada i seguretat, evidenciat en aspectes com la dificultat de la implementació de la comunicació per bus CAN a causa dels problemes de compatibilitat sorgits.
+
+D’altra banda, l’ús de l’eina Vitis Model Composer ha resultat en bona mesura una decisió acertada. Tanmateix, han sorgit certes dificultats que han empitjorat el temps de depuració de l’algorisme:
+
+* '''Paràmetres ocults.''' Certa configuració que es troba oculta a primera vista, com és la configuració de la coma fixa o el ''sample rate'' de cada bloc, amb la qual cosa es dificulta en certa mesura la depuració.
+* '''Bloqueig de Matlab.''' En realitzar les simulacions, moltes vegades Matlab es bloquejava i s’havia d’iniciar el programa des del principi, cosa que comportava una possible pèrdua de les dades.
+* '''Dificultat amb el control de versions.''' El control de versions no es aplicable amb els fitxers ''.slx'' que contenen la configuració dels models de Simulink, ja que no estan pensats per comparar-los a nivell de codi. En conseqüència, el control de versions amb eines com Git es coplica ja que no podem accedir i modificar les línies de codi que el configuren.
+
+Finalment, volia destacar que personalment aquest projecte ha suposat un procés d’aprenentatge constant, no només a nivell tècnic i d’assimilació de nous conceptes sinó també a nivell d’autoconeixement, organització personal i gestió de les expectatives. He après bastant entenent el per què no he pogut aconseguir certes fites en el projecte que no aplicant el conceptes que ja tenia, sense deixar de valorar la feina realitzada i la constància aplicada. Puc dir amb seguretat que l’experiència obtinguda treballant aquest projecte m’ajudarà en un futur a afrontar reptes més complexos i exigents.
+
+<span id="treball-futur"></span>
+= Treball futur =
+
+Com ja s’ha vist al llarg de la memòria, encara queda treball per realitzar tant a nivell de programari com de hardware. Així, el projecte del ''motor drive'' propi encara continua i es preveuen avenços en els propers mesos. En el moment de l’escriptura de la memòria, l’equip està iterant el disseny les plaques de potència, que es el pas previ al seu montatge i testeig físic.
+
+Quant l’implementació de l’algorisme de control i de la capa de seguretat es poden destacar els següent treball futur:
+
+* S’implementarà i es validarà la comunicació CAN amb els circuits de precàrrega i amb la PU del vehicle.
+* Es programaran la subrutina d’aturada suau per evitar que l’algorisme de control rebi una parada amb un esglaó.
+* Es treballarà en realitzar el sistema de detecció de l’angle i de la velocitat angular sobre FPGA. Actualment la detecció s’implementa en hardware mitjançant un circuit integrat especialitzat. El problema principal a solucionar és la baixa velocitat de de funcionament de l’integrat en comparació al de la FPGA.
+* Es valorarà implementar el ''hardware in the loop'' en cas de voler millorar les prestacions de l’algorisme de control, ja que proporciona una forma de testejar l’algorisme independentment de la fase de desenvolupament del hardware.
+* Es valorarà millorar l’eficiència energèntica de l’inversor realitzant una metodologia de testeig més intensiva.
+
+<div class="appendices">
+
+<span id="variables-i-constants-en-coma-fixa"></span>
+=  Variables i constants en coma fixa  =
+
+<span id="fixed_point" label="fixed_point"></span>
+
+{| class="wikitable"
+|-
+! style="text-align: left;"| Name
+! style="text-align: left;"| Units
+! colspan="3" style="text-align: center;"| Parameters
+! colspan="4" style="text-align: center;"| Calculations
+|-
+| style="text-align: left;"| <span>3-9</span>  
+| style="text-align: left;"|  
+| style="text-align: right;"| Min val
+| style="text-align: right;"| Max val
+| style="text-align: right;"| Size
+| style="text-align: right;"| Signed
+| style="text-align: right;"| Int. bits
+| style="text-align: right;"| Bin. point
+| style="text-align: right;"| Resolut.
+|-
+| style="text-align: left;"| torque
+| style="text-align: left;"| Nm
+| style="text-align: right;"| -2,910E+1
+| style="text-align: right;"| 2,910E+1
+| style="text-align: right;"| 16
+| style="text-align: right;"| 1
+| style="text-align: right;"| 5
+| style="text-align: right;"| 10
+| style="text-align: right;"| 9,766E-4
+|-
+| style="text-align: left;"| torque_ref
+| style="text-align: left;"| Nm
+| style="text-align: right;"| -2,910E+1
+| style="text-align: right;"| 2,910E+1
+| style="text-align: right;"| 16
+| style="text-align: right;"| 1
+| style="text-align: right;"| 5
+| style="text-align: right;"| 10
+| style="text-align: right;"| 9,766E-4
+|-
+| style="text-align: left;"| speed
+| style="text-align: left;"| rad/s
+| style="text-align: right;"| -1,214E+3
+| style="text-align: right;"| 1,215E+3
+| style="text-align: right;"| 24
+| style="text-align: right;"| 1
+| style="text-align: right;"| 11
+| style="text-align: right;"| 12
+| style="text-align: right;"| 2,441E-4
+|-
+| style="text-align: left;"| speed_ref
+| style="text-align: left;"| rad/s
+| style="text-align: right;"| -1,160E+4
+| style="text-align: right;"| 1,160E+4
+| style="text-align: right;"| 24
+| style="text-align: right;"| 1
+| style="text-align: right;"| 14
+| style="text-align: right;"| 9
+| style="text-align: right;"| 1,951E-3
+|-
+| style="text-align: left;"| angle
+| style="text-align: left;"| rad
+| style="text-align: right;"| 0,000E+0
+| style="text-align: right;"| 6,283E+0
+| style="text-align: right;"| 16
+| style="text-align: right;"| 0
+| style="text-align: right;"| 3
+| style="text-align: right;"| 13
+| style="text-align: right;"| 1,227E-4
+|-
+| style="text-align: left;"| sin
+| style="text-align: left;"| -
+| style="text-align: right;"| -1,000E+0
+| style="text-align: right;"| 1,000E+0
+| style="text-align: right;"| 16
+| style="text-align: right;"| 1
+| style="text-align: right;"| 0
+| style="text-align: right;"| 15
+| style="text-align: right;"| 3,052E-5
+|-
+| style="text-align: left;"| cos
+| style="text-align: left;"| -
+| style="text-align: right;"| -1,000E+0
+| style="text-align: right;"| 1,000E+0
+| style="text-align: right;"| 16
+| style="text-align: right;"| 1
+| style="text-align: right;"| 0
+| style="text-align: right;"| 15
+| style="text-align: right;"| 3,052E-5
+|-
+| style="text-align: left;"| ia
+| style="text-align: left;"| A
+| style="text-align: right;"| -8,000E+1
+| style="text-align: right;"| 8,000E+1
+| style="text-align: right;"| 16
+| style="text-align: right;"| 1
+| style="text-align: right;"| 7
+| style="text-align: right;"| 8
+| style="text-align: right;"| 3,906E-3
+|-
+| style="text-align: left;"| ib
+| style="text-align: left;"| A
+| style="text-align: right;"| -8,000E+1
+| style="text-align: right;"| 8,000E+1
+| style="text-align: right;"| 16
+| style="text-align: right;"| 1
+| style="text-align: right;"| 7
+| style="text-align: right;"| 8
+| style="text-align: right;"| 3,906E-3
+|-
+| style="text-align: left;"| iq
+| style="text-align: left;"| A
+| style="text-align: right;"| -8,000E+1
+| style="text-align: right;"| 8,000E+1
+| style="text-align: right;"| 16
+| style="text-align: right;"| 1
+| style="text-align: right;"| 7
+| style="text-align: right;"| 8
+| style="text-align: right;"| 3,906E-3
+|-
+| style="text-align: left;"| id
+| style="text-align: left;"| A
+| style="text-align: right;"| -8,000E+1
+| style="text-align: right;"| 8,000E+1
+| style="text-align: right;"| 16
+| style="text-align: right;"| 1
+| style="text-align: right;"| 7
+| style="text-align: right;"| 8
+| style="text-align: right;"| 3,906E-3
+|-
+| style="text-align: left;"| iq_ref
+| style="text-align: left;"| A
+| style="text-align: right;"| -8,626E+1
+| style="text-align: right;"| 8,626E+1
+| style="text-align: right;"| 16
+| style="text-align: right;"| 1
+| style="text-align: right;"| 7
+| style="text-align: right;"| 8
+| style="text-align: right;"| 3,906E-3
+|-
+| style="text-align: left;"| id_ref
+| style="text-align: left;"| A
+| style="text-align: right;"| -8,626E+1
+| style="text-align: right;"| 8,626E+1
+| style="text-align: right;"| 16
+| style="text-align: right;"| 1
+| style="text-align: right;"| 7
+| style="text-align: right;"| 8
+| style="text-align: right;"| 3,906E-3
+|-
+| style="text-align: left;"| vq
+| style="text-align: left;"| V
+| style="text-align: right;"| -1,200E+3
+| style="text-align: right;"| 1,200E+3
+| style="text-align: right;"| 20
+| style="text-align: right;"| 1
+| style="text-align: right;"| 11
+| style="text-align: right;"| 8
+| style="text-align: right;"| 3,906E-3
+|-
+| style="text-align: left;"| vd
+| style="text-align: left;"| V
+| style="text-align: right;"| -1,200E+3
+| style="text-align: right;"| 1,200E+3
+| style="text-align: right;"| 20
+| style="text-align: right;"| 1
+| style="text-align: right;"| 11
+| style="text-align: right;"| 8
+| style="text-align: right;"| 3,906E-3
+|-
+| style="text-align: left;"| vq_ref
+| style="text-align: left;"| V
+| style="text-align: right;"| -1,200E+3
+| style="text-align: right;"| 1,200E+3
+| style="text-align: right;"| 20
+| style="text-align: right;"| 1
+| style="text-align: right;"| 11
+| style="text-align: right;"| 8
+| style="text-align: right;"| 3,906E-3
+|-
+| style="text-align: left;"| vd_ref
+| style="text-align: left;"| V
+| style="text-align: right;"| -1,200E+3
+| style="text-align: right;"| 1,200E+3
+| style="text-align: right;"| 20
+| style="text-align: right;"| 1
+| style="text-align: right;"| 11
+| style="text-align: right;"| 8
+| style="text-align: right;"| 3,906E-3
+|-
+| style="text-align: left;"| magnitude
+| style="text-align: left;"| V
+| style="text-align: right;"| 0,000E+0
+| style="text-align: right;"| 3,464E+2
+| style="text-align: right;"| 16
+| style="text-align: right;"| 0
+| style="text-align: right;"| 9
+| style="text-align: right;"| 7
+| style="text-align: right;"| 7,812E-3
+|-
+| style="text-align: left;"| da
+| style="text-align: left;"| -
+| style="text-align: right;"| 0,000E+0
+| style="text-align: right;"| 1,000E+0
+| style="text-align: right;"| 16
+| style="text-align: right;"| 0
+| style="text-align: right;"| 1
+| style="text-align: right;"| 15
+| style="text-align: right;"| 3,052E-5
+|-
+| style="text-align: left;"| db
+| style="text-align: left;"| -
+| style="text-align: right;"| 0,000E+0
+| style="text-align: right;"| 1,000E+0
+| style="text-align: right;"| 16
+| style="text-align: right;"| 0
+| style="text-align: right;"| 1
+| style="text-align: right;"| 15
+| style="text-align: right;"| 3,052E-5
+|-
+| style="text-align: left;"| dc
+| style="text-align: left;"| -
+| style="text-align: right;"| 0,000E+0
+| style="text-align: right;"| 1,000E+0
+| style="text-align: right;"| 16
+| style="text-align: right;"| 0
+| style="text-align: right;"| 1
+| style="text-align: right;"| 15
+| style="text-align: right;"| 3,052E-5
+|-
+| style="text-align: left;"| da_on
+| style="text-align: left;"| -
+| style="text-align: right;"| 0,000E+0
+| style="text-align: right;"| 1,000E+0
+| style="text-align: right;"| 16
+| style="text-align: right;"| 0
+| style="text-align: right;"| 1
+| style="text-align: right;"| 15
+| style="text-align: right;"| 3,052E-5
+|-
+| style="text-align: left;"| db_on
+| style="text-align: left;"| -
+| style="text-align: right;"| 0,000E+0
+| style="text-align: right;"| 1,000E+0
+| style="text-align: right;"| 16
+| style="text-align: right;"| 0
+| style="text-align: right;"| 1
+| style="text-align: right;"| 15
+| style="text-align: right;"| 3,052E-5
+|-
+| style="text-align: left;"| dc_on
+| style="text-align: left;"| -
+| style="text-align: right;"| 0,000E+0
+| style="text-align: right;"| 1,000E+0
+| style="text-align: right;"| 16
+| style="text-align: right;"| 0
+| style="text-align: right;"| 1
+| style="text-align: right;"| 15
+| style="text-align: right;"| 3,052E-5
+|-
+| style="text-align: left;"| polePairs
+| style="text-align: left;"| -
+| colspan="2" style="text-align: center;"| 4,000E+0
+| style="text-align: right;"| 3
+| style="text-align: right;"| 0
+| style="text-align: right;"| 3
+| style="text-align: right;"| 0
+| style="text-align: right;"| 1,000E+0
+|-
+| style="text-align: left;"| Rs
+| style="text-align: left;"| <math display="inline">\Omega</math>
+| colspan="2" style="text-align: center;"| 1,260E-1
+| style="text-align: right;"| 16
+| style="text-align: right;"| 0
+| style="text-align: right;"| 0
+| style="text-align: right;"| 3
+| style="text-align: right;"| 1,250E-1
+|-
+| style="text-align: left;"| Lq
+| style="text-align: left;"| H
+| colspan="2" style="text-align: center;"| 3,900E-4
+| style="text-align: right;"| 16
+| style="text-align: right;"| 0
+| style="text-align: right;"| 0
+| style="text-align: right;"| 12
+| style="text-align: right;"| 2,441E-4
+|-
+| style="text-align: left;"| Ld
+| style="text-align: left;"| H
+| colspan="2" style="text-align: center;"| 2,330E-0
+| style="text-align: right;"| 16
+| style="text-align: right;"| 0
+| style="text-align: right;"| 0
+| style="text-align: right;"| 13
+| style="text-align: right;"| 1,221E-4
+|-
+| style="text-align: left;"| fluxLinkage
+| style="text-align: left;"| Wb
+| colspan="2" style="text-align: center;"| 4,920E-1
+| style="text-align: right;"| 16
+| style="text-align: right;"| 0
+| style="text-align: right;"| 0
+| style="text-align: right;"| 2
+| style="text-align: right;"| 2,500E-1
+|-
+| style="text-align: left;"| <math display="inline">\sqrt{3}</math>
+| style="text-align: left;"| Wb
+| colspan="2" style="text-align: center;"| 4,920E-1
+| style="text-align: right;"| 16
+| style="text-align: right;"| 0
+| style="text-align: right;"| 0
+| style="text-align: right;"| 2
+| style="text-align: right;"| 2,500E-1
+|}
+
+<span id="informes-dimplementació-en-vivado"></span>
+=  Informes d’implementació en Vivado  =
+
+<span id="vivado" label="vivado"></span>
+
+En aquest annex s’incorporen els resums dels informes autogenerats per Vivado quan es realitza la implementació del disseny en FPGA. Els resultats obtinguts corresponen a la implementació sobre la placa Diligent Cora Z7-10, que conté el SoC Zynq-7010.
+
+<span id="informe-dutilització"></span>
+== Informe d’utilització ==
+
+<div class="figure">
+
+[[File: img/4_implementacio/utilization.png |453px]]
+
+</div>
+<div class="figure">
+
+[[File: img/4_implementacio/implementation.png |340px]]
+
+</div>
+<span id="informe-de-temporització"></span>
+== Informe de temporització ==
+
+<div class="figure">
+
+[[File: img/4_implementacio/timing.png |604px]]
+
+</div>
+<span id="informe-de-potència"></span>
+== Informe de potència ==
+
+<div class="figure">
+
+[[File: img/4_implementacio/power.png |604px]]
+
+</div>
+
+</div>

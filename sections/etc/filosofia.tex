@@ -1,0 +1,63 @@
+\subsection{ Filosofía de diseño }
+
+Para el diseño, se han seguido una serie de principios a modo de guía en la
+toma de decisiones:
+
+\begin{itemize}
+
+    \item \textbf{ Navaja de Ockam }. Las soluciones sencillas son preferibles
+    a las complicadas, puesto a medida que se incorpora complejidad, los
+    errores humanos y de concepto se ven multiplicados. Por esta razón, se han
+    escogido soluciones sencillas en la medida de lo posible.
+
+    \item \textbf{ Test Early, Test Often, Test Everything }. Es un principio
+    heurístico que pone de manifiesto la importancia de diseñar e implementar
+    tests de validación de código, la misma que cualquier otro componente de
+    código: documentándolos e incluyéndolos en el control de versiones como si
+    lo fueran. Con el objetivo de implementar los tests, es deseable que el
+    código adquiera modularidad, la cual puede ser otorgada de manera intuituva
+    mediante el paradigma de la programación orientada a objetos (OPP) que
+    permiten lenguages como C++.
+
+    \item \textbf{ Modularidad }.
+
+\end{itemize}
+
+En la implementación del control, cabe marcar claramente dos flujos de trabajo
+diferentes, en función de si se realiza la programación del la lógica
+progamable o el microprocesador.
+
+Una vez entendido el control estudiado y simulada, ya es posible diseñar la
+solución de control.
+
+En el proceso de diseño no solo debemos considerar las especificaciones finales
+del sistema a implementar, sino también los prototipos necesarios para validar
+las ideas teóricas que lo soportan y reducir al máximo los posibles errores
+que, entre otros, están causados por una fabricación defectuosa, falta de
+habilidad o simplemente por el despiste humano.
+
+El desarrollo del inversor se ve limitado por diferentes factores. Teniendo un
+entendimiento de cuáles son esos factores, se puede realizar un diseño más
+acertado. Estos son:
+
+\begin{itemize}
+    \item Los recursos ecómicos disponibles por el equipo. 
+    \item Los conocimientos teóricos.
+    \item Los conocimientos "prácticos".
+\end{itemize}
+
+Entre los factores que no limitan el desarrollo del inversor encontramos el
+tiempo, puesto que a priori no hay una fecha en la cuál el inversor deba estar
+listo y nos limite en cuanto a tiempo.
+
+Bajo estas condiciones, los antiguos resposables del proyecto del inversor
+siempre manifestaron su voluntad de estudiar e implementar lo último en el
+estado del arte. Por eso se han elegido transistores MOSTET de Silicon Carbide
+y el control por FPGA, no teniendo en cuenta la facilidad de la implementación.
+
+Desde el principio entendí que sería un proyecto lo suficientemente interesante
+como para merecer dedicarme a ello en este trabajo fin de grado, haciendo gala
+de la peculiar mezcla de valentía, locura y excentricismo que escondo en algún
+de mi psique, de la cual me enorgullezco a posteriori, una vez ya he terminado
+el proyecto, porque mientras estoy trabajando en él, cuando las dificultades
+crecen y se reproducen, las cosas no parecen tan claras.

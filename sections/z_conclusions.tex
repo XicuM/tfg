@@ -1,0 +1,51 @@
+En aquesta memòria s'ha explicat i analitzat el procés d'implementació d'un
+control per \emph{Motor drive} en FPGA i de la capa de seguretat addicional,
+posant especial èmfasi a les decisions presses en cada moment i com s'ha anat
+desenvolupant el projecte en conseqüència. 
+
+El projecte va iniciar-se amb bon peu en un principi. En la fase
+intermitja es varen trobar algunes dificultats en la depuració del model en
+Vitis Model Composer, en gran part pels temps de simulació elevats. Es va poder
+completar aquest apartat; no obstant, els resultats obtinguts no acaben de ser
+totalment rigurosos. En el cas d'haver-hi dedicat un temps addicional a
+l'experimentació i l'anàlisi dels resultats en comptes de continuar amb la capa
+de programari, es podria haver acabat de validar completament l'algorisme en
+FPGA. No obstant, es decidí seguir amb el pla de treball original, ja que en el
+moment de realitzar la revisió crítica es va subestimar la magnitud del treball
+necessari per programar la capa d'arrencada, parada i seguretat, evidenciat en
+aspectes com la dificultat de la implementació de la comunicació per bus CAN a
+causa dels problemes de compatibilitat sorgits.
+
+D'altra banda, l'ús de l'eina Vitis Model Composer ha resultat en bona mesura una
+decisió acertada. Tanmateix, han sorgit certes dificultats que han empitjorat
+el temps de depuració de l'algorisme:
+
+\begin{itemize}
+
+    \item \textbf{Paràmetres ocults.}
+        Certa configuració que es troba oculta a primera vista, com és la
+        configuració de la coma fixa o el \emph{sample rate} de cada bloc, amb
+        la qual cosa es dificulta en certa mesura la depuració.
+
+    \item \textbf{Bloqueig de Matlab.} 
+        En realitzar les simulacions, moltes vegades Matlab es bloquejava i
+        s'havia d'iniciar el programa des del principi, cosa que comportava una
+        possible pèrdua de les dades.
+
+    \item \textbf{Dificultat amb el control de versions.}
+        El control de versions no es aplicable amb els fitxers \emph{.slx} que
+        contenen la configuració dels models de Simulink, ja que no estan
+        pensats per comparar-los a nivell de codi. En conseqüència, el
+        control de versions amb eines com Git es coplica ja que no podem
+        accedir i modificar les línies de codi que el configuren.
+
+\end{itemize}
+
+Finalment, volia destacar que personalment aquest projecte ha suposat un procés
+d'aprenentatge constant, no només a nivell tècnic i d'assimilació de nous
+conceptes sinó també a nivell d'autoconeixement, organització personal i gestió
+de les expectatives. He après bastant entenent el per què no he pogut
+aconseguir certes fites en el projecte que no aplicant el conceptes que ja
+tenia, sense deixar de valorar la feina realitzada i la constància aplicada.
+Puc dir amb seguretat que l'experiència obtinguda treballant aquest projecte
+m'ajudarà en un futur a afrontar reptes més complexos i exigents.

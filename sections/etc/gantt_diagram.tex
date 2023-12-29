@@ -1,0 +1,53 @@
+\begin{ganttchart}[
+    y unit title = 0.4cm,
+    y unit chart = 0.5cm,
+    vgrid, 
+    hgrid,
+    title height = 1,
+    today = 17,
+    today offset = .5,
+    today label = Now,
+    bar/.style = { draw, fill = cyan },
+    bar incomplete/.append style = { fill = yellow!50 },
+    bar height=0.7
+]{1}{17}
+
+% dies
+\gantttitle{Fases del projecte}{17} \\
+\gantttitle{Març}{5}
+\gantttitle{Abril}{4}
+\gantttitle{Maig}{4}
+\gantttitle{Juny}{4} \\
+ 
+% caixes elem0 .. elem9 
+\ganttgroup[inline=false]{Treball previ}{1}{2}\\
+    \ganttbar[progress=100]{Estudi del disseny inicial}{1}{2} \\
+    \ganttbar[progress=100]{Elecció de la FPGA}{1}{1} \\
+    \ganttbar[progress=100]{ Elecció de resolver o encoder }{2}{2} \\ \\
+ 
+\ganttgroup[inline=false]{Algorisme de control}{3}{8}\\
+    \ganttbar[progress=100]{ Impl. de SVPWM }{3}{3} \\
+    \ganttbar[progress=100]{ Impl. de transformades i LUTs }{4}{4} \\
+    \ganttbar[progress=100]{ Impl. del ctrl. de corrent, FW i altres }{5}{5} \\
+    \ganttbar[progress=100]{ Depuració de l'algorisme de control }{6}{7} \\
+    \ganttbar[progress=100]{ Control del resolver }{8}{8} \\ \\
+ 
+\ganttgroup[inline=false]{Microprocessador}{9}{11}\\
+    \ganttbar[progress=100]{ Disseny de la màquina d'estats }{9}{9} \\
+    \ganttbar[progress=100]{ Implementació de CAN }{10}{10} \\
+    \ganttbar[progress=0]{ Validació de CAN }{11}{11} \\ \\
+ 
+\ganttgroup[inline=false]{Simulacions i validacions}{12}{15}\\
+    \ganttbar[progress=100]{Simulació en Xilinx Vivado}{12}{12} \\
+    \ganttbar[progress=0]{Validació en placa de potència}{13}{13} \\
+    \ganttbar[progress=0]{Validadió en bancada}{14}{15} \\ \\
+ 
+\ganttgroup[inline=false]{Documentació i lliurables}{1}{16}\\
+    \ganttbar[progress=100]{Redacció de la proposta de treball}{1}{1} \\
+    \ganttmilestone{Lliurament de la proposta de treball}{1}{1} \\
+    \ganttbar[progress=100]{Redacció de la revisió crítica}{7}{8} \\
+    \ganttmilestone{Lliurament de la proposta de treball}{8}{8} \\
+    \ganttbar[progress=100]{Redacció de la memòria final}{10}{16} \\
+    \ganttmilestone{Lliurament de la proposta de treball}{16}{16} \\ \\
+
+\end{ganttchart}
