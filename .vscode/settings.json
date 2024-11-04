@@ -1,0 +1,31 @@
+{
+    "latex-workshop.latex.tools": [
+        {
+            "name": "latexmk",
+            "command": "latexmk",
+            "args": [
+                "-pdf",
+                "-outdir=.aux",
+                "%DOC%"
+            ],
+            "env": {}
+        },
+        {
+            "name": "copy-pdf",
+            "command": "bash",
+            "args": [
+                "-c",
+                "cp .aux/%DOCFILE%.pdf ./"
+            ]
+        }
+    ],
+    "latex-workshop.latex.recipes": [
+        {
+            "name": "latexmk with PDF move",
+            "tools": [
+                "latexmk",
+                "copy-pdf"
+            ]
+        }
+    ]
+}
